@@ -492,8 +492,11 @@ function openProfile() {
     <button onclick="p=JSON.parse(localStorage.getItem('users'));p.push({name:prompt('name'),key:prompt('token')});localStorage.setItem('users',JSON.stringify(p))">Add user</button>
     <br/>
     <button onclick='localStorage.setItem("key", prompt("API Token?"));'>Sign in</button>
+    <br/>
     <h2>How to generate a token:</h2>
-    <p>Go to Canvas and click your profile picture, hit Settings. Once the page loads, scroll down and hit New Access Token. Set the purpose to anything you like, and hit Generate. Copy the long string of text (ex: 1234~qwertyuiop...) and paste it into the sign in prompt here.</p>`;
+    <p>Go to Canvas and click your profile picture, hit Settings. Once the page loads, scroll down and hit New Access Token. Set the purpose to anything you like, and hit Generate. Copy the long string of text (ex: 1234~qwertyuiop...) and paste it into the sign in prompt here.</p>
+    <h2>How to allow insecure contexts</h2>
+    <p>Click the settings icon next to the URL bar and click Site Settings. Scroll down to Insecure Context and change it to allow.</p>
   }
   content += `
   <br/>
