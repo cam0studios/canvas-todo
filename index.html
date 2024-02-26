@@ -152,7 +152,14 @@
             from {left: 65px; opacity:1}
             to {left: -70px; opacity:0}
         }
+        
+        #hcpss {
+            height: 100px;
+        }
 
+        #hcpss>p {
+            top:45px;
+        }
         #profile>p {
             top: 20px;
         }
@@ -312,6 +319,10 @@
         <h1>Inbox</h1>
     </div>
     <div id="sidebar" class="container">
+        <div id="hcpss" onclick="window.open('https://hcpss.instructure.com')">
+            <span class="material-symbols-outlined">brightness_empty</span>
+            <p>Open Canvas</p>
+        </div>
         <div id="profile" onclick="openProfile()">
             <span class="material-symbols-outlined">account_circle</span>
             <p>Profile</p>
