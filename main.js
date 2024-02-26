@@ -38,36 +38,54 @@ if(true) {
   }
   times.timeSheet = {normal:[
     {name:"Homeroom",startTime:times.timeNum(8,20),endTime:times.timeNum(8,27)},
-    {name:"1",  startTime:times.timeNum(8,30), endTime:times.timeNum(9,27)},
-    {name:"2",  startTime:times.timeNum(9,30), endTime:times.timeNum(10,19)},
-    {name:"3",  startTime:times.timeNum(10,22),endTime:times.timeNum(11,11)},
-    {name:"4-5",startTime:times.timeNum(11,14),endTime:times.timeNum(12,4)},
-    {name:"6-7",startTime:times.timeNum(12,7), endTime:times.timeNum(12,57)},
-    {name:"8",  startTime:times.timeNum(13,0), endTime:times.timeNum(13,30)},
-    {name:"9",  startTime:times.timeNum(13,33),endTime:times.timeNum(14,23)},
-    {name:"10", startTime:times.timeNum(14,26),endTime:times.timeNum(15,15)}
+    {name:"1", startTime:times.timeNum(8,30), endTime:times.timeNum(9,27)},
+    {name:"2", startTime:times.timeNum(9,30), endTime:times.timeNum(10,19)},
+    {name:"3", startTime:times.timeNum(10,22),endTime:times.timeNum(11,11)},
+    {name:"4", startTime:times.timeNum(11,14),endTime:times.timeNum(11,44)},
+    {name:"5", startTime:times.timeNum(11,47),endTime:times.timeNum(12,4)},
+    {name:"6", startTime:times.timeNum(12,7), endTime:times.timeNum(12,37)},
+    {name:"7", startTime:times.timeNum(12,40),endTime:times.timeNum(12,57)},
+    {name:"8", startTime:times.timeNum(13,0), endTime:times.timeNum(13,30)},
+    {name:"9", startTime:times.timeNum(13,33),endTime:times.timeNum(14,23)},
+    {name:"10",startTime:times.timeNum(14,26),endTime:times.timeNum(15,15)}
   ],set:[
     {name:"Homeroom",startTime:times.timeNum(8,20),endTime:times.timeNum(8,27)},
-    {name:"SET",startTime:times.timeNum(8,30), endTime:times.timeNum(9,7)},
-    {name:"1",  startTime:times.timeNum(9,7),  endTime:times.timeNum(9,47)},
-    {name:"2",  startTime:times.timeNum(9,49), endTime:times.timeNum(10,29)},
-    {name:"3",  startTime:times.timeNum(10,31),endTime:times.timeNum(11,11)},
-    {name:"4-5",startTime:times.timeNum(11,13),endTime:times.timeNum(11,53)},
-    {name:"6-7",startTime:times.timeNum(11,55),endTime:times.timeNum(12,25)},
-    {name:"8",  startTime:times.timeNum(12,27),endTime:times.timeNum(13,7)},
-    {name:"9",  startTime:times.timeNum(13,9), endTime:times.timeNum(13,49)},
-    {name:"10", startTime:times.timeNum(13,51),endTime:times.timeNum(14,31)},
+    {name:"SET",startTime:times.timeNum(8,30),endTime:times.timeNum(9,7)},
+    {name:"1", startTime:times.timeNum(9,7),  endTime:times.timeNum(9,47)},
+    {name:"2", startTime:times.timeNum(9,49), endTime:times.timeNum(10,29)},
+    {name:"3", startTime:times.timeNum(10,31),endTime:times.timeNum(11,11)},
+    {name:"4", startTime:times.timeNum(11,13),endTime:times.timeNum(11,43)},
+    {name:"5", startTime:times.timeNum(11,45),endTime:times.timeNum(11,53)},
+    {name:"6", startTime:times.timeNum(11,55),endTime:times.timeNum(12,25)},
+    {name:"7", startTime:times.timeNum(12,27),endTime:times.timeNum(12,35)},
+    {name:"8", startTime:times.timeNum(12,37),endTime:times.timeNum(13,7)},
+    {name:"9", startTime:times.timeNum(13,9), endTime:times.timeNum(13,49)},
+    {name:"10",startTime:times.timeNum(13,51),endTime:times.timeNum(14,31)},
     {name:"Club",startTime:times.timeNum(14,35),endTime:times.timeNum(15,15)}
   ],half:[
     {name:"Homeroom",startTime:times.timeNum(8,20),endTime:times.timeNum(8,27)},
-    {name:"1",  startTime:times.timeNum(8,30), endTime:times.timeNum(9,1)},
-    {name:"2",  startTime:times.timeNum(9,4),  endTime:times.timeNum(9,29)},
-    {name:"3",  startTime:times.timeNum(9,32), endTime:times.timeNum(9,57)},
-    {name:"9",  startTime:times.timeNum(10,0), endTime:times.timeNum(10,25)},
-    {name:"10", startTime:times.timeNum(10,28),endTime:times.timeNum(10,54)},
-    {name:"8",  startTime:times.timeNum(10,7), endTime:times.timeNum(11,17)},
-    {name:"6-7",startTime:times.timeNum(11,20),endTime:times.timeNum(11,46)},
-    {name:"4-5",startTime:times.timeNum(11,49),endTime:times.timeNum(12,15)}
+    {name:"1", startTime:times.timeNum(8,30), endTime:times.timeNum(9,1)},
+    {name:"2", startTime:times.timeNum(9,4),  endTime:times.timeNum(9,29)},
+    {name:"3", startTime:times.timeNum(9,32), endTime:times.timeNum(9,57)},
+    {name:"9", startTime:times.timeNum(10,0), endTime:times.timeNum(10,25)},
+    {name:"10",startTime:times.timeNum(10,28),endTime:times.timeNum(10,54)},
+    {name:"8", startTime:times.timeNum(10,7), endTime:times.timeNum(11,17)},
+    {name:"7", startTime:times.timeNum(11,20),endTime:times.timeNum(11,23)},
+    {name:"6", startTime:times.timeNum(11,26),endTime:times.timeNum(11,46)},
+    {name:"5", startTime:times.timeNum(11,49),endTime:times.timeNum(11,52)},
+    {name:"4", startTime:times.timeNum(11,55),endTime:times.timeNum(12,15)}
+  ],delay:[
+    {name:"Homeroom",startTime:times.timeNum(0,0),endTime:times.timeNum(0,0)},
+    {name:"1", startTime:times.timeNum(10,30),endTime:times.timeNum(11,9)},
+    {name:"2", startTime:times.timeNum(11,12),endTime:times.timeNum(11,44)},
+    {name:"3", startTime:times.timeNum(11,47),endTime:times.timeNum(12,19)},
+    {name:"4", startTime:times.timeNum(12,22),endTime:times.timeNum(12,52)},
+    {name:"5", startTime:times.timeNum(12,55),endTime:times.timeNum(12,55)},
+    {name:"6", startTime:times.timeNum(12,58),endTime:times.timeNum(13,28)},
+    {name:"7", startTime:times.timeNum(13,31),endTime:times.timeNum(13,31)},
+    {name:"8", startTime:times.timeNum(13,34),endTime:times.timeNum(14,4)},
+    {name:"9", startTime:times.timeNum(14,7), endTime:times.timeNum(14,40)},
+    {name:"10",startTime:times.timeNum(14,43),endTime:times.timeNum(15,15)},
   ]};
 
   times.days = {};
@@ -464,6 +482,7 @@ function openSchedule() {
   <button onclick="setToday('normal')">Normal</button>
   <button onclick="setToday('set')">SET/Club (Monday)</button>
   <button onclick="setToday('half')">Half Day</button>
+  <button onclick="setToday('delay')">2 Hour Delay</button>
   </p>
   `,"Schedule");
 }
