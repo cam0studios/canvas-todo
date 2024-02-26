@@ -74,10 +74,22 @@ if(true) {
     {name:"6", startTime:times.timeNum(11,26),endTime:times.timeNum(11,46)},
     {name:"5", startTime:times.timeNum(11,49),endTime:times.timeNum(11,52)},
     {name:"4", startTime:times.timeNum(11,55),endTime:times.timeNum(12,15)}
+  ],delay:[
+    {name:"Homeroom",startTime:times.timeNum(0,0),endTime:times.timeNum(0,0)},
+    {name:"1", startTime:times.timeNum(10,30),endTime:times.timeNum(11,9)},
+    {name:"2", startTime:times.timeNum(11,12),endTime:times.timeNum(11,44)},
+    {name:"3", startTime:times.timeNum(11,47),endTime:times.timeNum(12,19)},
+    {name:"4", startTime:times.timeNum(12,22),endTime:times.timeNum(12,52)},
+    {name:"5", startTime:times.timeNum(12,55),endTime:times.timeNum(12,55)},
+    {name:"6", startTime:times.timeNum(12,58),endTime:times.timeNum(13,28)},
+    {name:"7", startTime:times.timeNum(13,31),endTime:times.timeNum(13,31)},
+    {name:"8", startTime:times.timeNum(13,34),endTime:times.timeNum(14,4)},
+    {name:"9", startTime:times.timeNum(14,7), endTime:times.timeNum(14,40)},
+    {name:"10",startTime:times.timeNum(14,43),endTime:times.timeNum(15,15)},
   ]};
 
   times.days = {};
-  //{normal,set,half}
+  //{normal,set,half,delay}
   //{name, startTime, endTime}
 
   times.getData = function(time,day,schedule) {
@@ -98,8 +110,7 @@ if(true) {
     return {name:e.name,timeLeft:e.endTime-t,timeIn:t-e.startTime};
   }
   /*  Example Usage:
-  updateTimes();
-  setInterval(updateTimes,500);
+  setInterval(updateTimes,1000);
   function updateTimes() {
     let t = times.getHr(times.getData().timeLeft);
     let res = [t[0].toString(),t[1].toString(),t[2].toString()];
@@ -400,9 +411,7 @@ function getData(loc, inputs, callback, error) {
     "credentials": "omit"
   }).then(r => r.json()).then(callback).catch((err) => {
     console.log(err);
-    if(arguments.length>3) {
-      error(err);
-    }
+    if(arguments.length>3) error(err);
   });
 }
 
@@ -504,9 +513,9 @@ function openProfile() {
     <p>Go to Canvas and click your profile picture, hit Settings. Once the page loads, scroll down and hit New Access Token. Set the purpose to anything you like, and hit Generate. Copy the long string of text (ex: 1234~qwertyuiop...) and paste it into the sign in prompt here.</p>
     <h2>How to allow insecure contexts</h2>
     <p>Click the settings icon next to the URL bar and click Site Settings. Scroll down to Insecure Context and change it to allow.</p>
+    `;
   }
   content += `
-  <br/>
   <br/>
   <input type="checkbox" name="storeMsgCheck" id="storeMessagesCheck"></input>
   <label for="storeMsgCheck">Store Messages</label>
