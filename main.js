@@ -74,18 +74,6 @@ if(true) {
     {name:"6", startTime:times.timeNum(11,26),endTime:times.timeNum(11,46)},
     {name:"5", startTime:times.timeNum(11,49),endTime:times.timeNum(11,52)},
     {name:"4", startTime:times.timeNum(11,55),endTime:times.timeNum(12,15)}
-  ],delay:[
-    {name:"Homeroom",startTime:times.timeNum(0,0),endTime:times.timeNum(0,0)},
-    {name:"1", startTime:times.timeNum(10,30),endTime:times.timeNum(11,9)},
-    {name:"2", startTime:times.timeNum(11,12),endTime:times.timeNum(11,44)},
-    {name:"3", startTime:times.timeNum(11,47),endTime:times.timeNum(12,19)},
-    {name:"4", startTime:times.timeNum(12,22),endTime:times.timeNum(12,52)},
-    {name:"5", startTime:times.timeNum(12,55),endTime:times.timeNum(12,55)},
-    {name:"6", startTime:times.timeNum(12,58),endTime:times.timeNum(13,28)},
-    {name:"7", startTime:times.timeNum(13,31),endTime:times.timeNum(13,31)},
-    {name:"8", startTime:times.timeNum(13,34),endTime:times.timeNum(14,4)},
-    {name:"9", startTime:times.timeNum(14,7), endTime:times.timeNum(14,40)},
-    {name:"10",startTime:times.timeNum(14,43),endTime:times.timeNum(15,15)},
   ]};
 
   times.days = {};
