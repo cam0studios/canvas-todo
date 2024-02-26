@@ -114,7 +114,12 @@
             position: absolute;
             border-radius: 100px;
             width: 30px;
+        }
+        #profilePic {
             border: solid white 2px;
+        }
+        #hcpssOpen {
+            width: 70px !important;
         }
 
         #sidebar>*>p {
@@ -320,7 +325,8 @@
     </div>
     <div id="sidebar" class="container">
         <div id="hcpss" onclick="window.open('https://hcpss.instructure.com')">
-            <span class="material-symbols-outlined">brightness_empty</span>
+            <!--<span class="material-symbols-outlined">brightness_empty</span>-->
+            <img id="hcpssOpen" src="https://instructure-uploads.s3.amazonaws.com/account_31230000000000001/attachments/1943770/HCPSS-home2.png?AWSAccessKeyId=AKIAJFNFXH2V2O7RPCAA&Expires=1938068198&Signature=NmotABSeWKTiSUM4TdKOlqvPQrU%3D&response-cache-control=Cache-Control%3Amax-age%3D473364000.0%2C%20public&response-expires=473364000.0">
             <p>Open Canvas</p>
         </div>
         <div id="profile" onclick="openProfile()">
