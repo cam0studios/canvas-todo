@@ -432,13 +432,24 @@ function popup(content,name,remove) {
 }
 
 setInterval(() => {
-  if(times.getData().timeLeft) {
-    document.querySelector("#schedule>p").innerHTML = `Time left in ${times.getData().name}: ${updateSchedule()}`
-  } else {
-    document.querySelector("#schedule>p").innerHTML = times.getData().name;
+  for(let key in document.getElementsByClassName("timeLeft")) {
+    if(!isNaN(parseInt(key))) {
+      let e = document.getElementsByClassName("timeLeft")[key];
+      if(times.getData().timeLeft) {
+        e.innerHTML = getTime();
+      } else {
+        e.innerHTML = "N/A";
+      }
+    }
+  }
+  for(let key in document.getElementsByClassName("period")) {
+    if(!isNaN(parseInt(key))) {
+      let e = document.getElementsByClassName("period")[key];
+      e.innerHTML = times.getData().name;
+    }
   }
 }, 1000);
-function updateSchedule() {
+function getTime() {
   let t = times.getHr(times.getData().timeLeft);
   let res = [t[0].toString(),t[1].toString(),t[2].toString()];
   if(res[2].length==1) res[2] = `0${res[2]}`;
@@ -447,11 +458,13 @@ function updateSchedule() {
 }
 function openSchedule() {
   popup(`
+  <p>Time left in <span class="period">0</span>: <span class="timeLeft">0:00:00</span></p>
   <p>Today's Schedule: ${times.days[times.getDay()] || "normal"}</p>
-  <p>Set schedule to:</p>
+  <p>Set schedule to:
   <button onclick="setToday('normal')">Normal</button>
   <button onclick="setToday('set')">SET/Club (Monday)</button>
   <button onclick="setToday('half')">Half Day</button>
+  </p>
   `,"Schedule");
 }
 function openProfile() {
