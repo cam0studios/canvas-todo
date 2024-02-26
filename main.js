@@ -233,6 +233,7 @@ getData("users/self", "", (e) => {
     console.log(e);
     let img = document.createElement("img");
     img.src = e.avatar_url;
+    img.id = "profilePic";
     img.addEventListener("load",() => {
       document.querySelector("#profile>span").remove();
       document.querySelector("#profile").appendChild(img);
