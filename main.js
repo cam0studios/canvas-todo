@@ -370,7 +370,7 @@ getData("conversations/unread_count", "", (e) => {
 });
 */
 function getData(loc, inputs, callback, error) {
-  fetch(`http://pikastinks.us.to:3000/corsProxy?url=${encodeURIComponent(`${API_URL}/${loc}?access_token=${API_TOKEN}${inputs.length > 0 ? "&" + inputs : ""}`)}`, {
+  fetch(`http://pikastinks.us.to:8060/corsProxy?url=${encodeURIComponent(`${API_URL}/${loc}?access_token=${API_TOKEN}${inputs.length > 0 ? "&" + inputs : ""}`)}`, {
     "body":
       JSON.stringify({
         headers: {
