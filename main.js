@@ -341,7 +341,6 @@ getData("conversations", "per_page=10", (convos) => {
       }
     }
     convos.forEach((e) => {
-
       let elem = document.createElement("div");
       elem.setAttribute("class", "item " + e.workflow_state);
       //elem.setAttribute("onclick", `window.open("https://hcpss.instructure.com/conversations","_blank").focus()`);
@@ -515,8 +514,6 @@ function openProfile() {
     <br/>
     <h2>How to generate a token:</h2>
     <p>Go to Canvas and click your profile picture, hit Settings. Once the page loads, scroll down and hit New Access Token. Set the purpose to anything you like, and hit Generate. Copy the long string of text (ex: 1234~qwertyuiop...) and paste it into the sign in prompt here.</p>
-    <h2>How to allow insecure contexts</h2>
-    <p>Click the settings icon next to the URL bar and click Site Settings. Scroll down to Insecure Context and change it to allow.</p>
     `;
   }
   content += `
