@@ -122,7 +122,7 @@ if(true) {
 }
 
 
-const API_URL = 'https://hcpss.instructure.com/api/v1';
+const API_URL = 'hcpss.instructure.com/api/v1';
 if (!localStorage.getItem("key")) {
   localStorage.setItem("key", 0);
 }
@@ -388,7 +388,7 @@ getData("conversations/unread_count", "", (e) => {
 });
 */
 function getData(loc, inputs, callback, error) {
-  fetch(`http://pikastinks.us.to:8060/corsProxy?url=${encodeURIComponent(`${API_URL}/${loc}?access_token=${API_TOKEN}${inputs.length > 0 ? "&" + inputs : ""}`)}`, {
+  fetch(`https://corsanywhere.vercel.app/${API_URL}/${loc}?access_token=${API_TOKEN}${inputs.length > 0 ? "&" + inputs : ""}`, {
     "body":
       JSON.stringify({
         headers: {
@@ -409,9 +409,12 @@ function getData(loc, inputs, callback, error) {
     "method": "GET",
     "body": null,
     "mode": "cors",
-    "credentials": "omit"
-  }).then(r => r.json()).then(callback).catch((err) => {
-    console.log(err);
+    "credentials": "omit",
+    "origin": "cam0studios.github.io"
+  })
+  .then(r => r.json()).then(callback)
+  .catch((err) => {
+    console.error(err);
     if(arguments.length>3) error(err);
   });
 }
