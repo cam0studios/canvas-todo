@@ -87,27 +87,49 @@ if(true) {
     {name:"9", startTime:times.timeNum(14,7), endTime:times.timeNum(14,40)},
     {name:"10",startTime:times.timeNum(14,43),endTime:times.timeNum(15,15)},
   ]};
+  times.grades = [
+    {name:"6",periods:["4","5-6","7-8"]},
+    {name:"7",periods:["4-5","6","7-8"]},
+    {name:"8",periods:["4-5","6-7","8"]}
+  ];
+  times.allBeginning = ["Homeroom","1","2","3"];
+  times.allEnd = ["9","10"];
 
   times.days = {};
-  //{normal,set,half,delay}
-  //{name, startTime, endTime}
+  times.grade = 2;
+  //day: {normal,set,half,delay}
+  //getData: {name, startTime, endTime}
 
-  times.getData = function(time,day,schedule) {
+  times.getData = function(time,day,schedule,grade) {
+    try {
     if(arguments.length==0||time=="") time = times.timeNum();
     if(arguments.length<2||day=="") day = times.days[times.getDay()] || "normal";
     if(arguments.length<3||schedule=="") schedule = times.timeSheet[day];
+    if(arguments.length<4||grade=="") grade = times.grade;
     let pd = null;
     let t = times.timeNum();
     if(t>=schedule[0].startTime && t<=schedule[schedule.length-1].endTime) {
-      schedule.forEach((e,i)=>{
-        if(t>=e.startTime && t<=e.endTime) pd = i;
+      let gradeFull = JSON.parse(JSON.stringify(times.grades[grade]));
+      times.allBeginning.forEach((e,i) => gradeFull.periods.unshift(times.allBeginning[times.allBeginning.length-i-1]));
+      times.allEnd.forEach((e) => gradeFull.periods.push(e));
+      console.log("start");
+      console.log(gradeFull);
+      gradeFull.periods.forEach((e,i)=>{
+        let pds = [];
+        e.split("-").forEach((pd) => pds.push(schedule[schedule.map(s=>s.name).indexOf(pd)]));
+        pds.sort((a,b) => a.startTime-b.startTime);
+        let start = pds[0].startTime;
+        let end = pds[pds.length-1].endTime;
+        if(t>=start && t<=end) {
+          pd = {name:pds.map(p=>p.name).join("-"),startTime:start,endTime:end};
+        }
       });
       if(pd == null) return {name:"Transition"};
     } else {
       return {name:"Out of School"};
     }
-    let e = schedule[pd];
-    return {name:e.name,timeLeft:e.endTime-t,timeIn:t-e.startTime};
+    return {name:pd.name,timeLeft:pd.endTime-t,timeIn:t-pd.startTime};
+    } catch(err) {console.error(err)}
   }
   /*  Example Usage:
   setInterval(updateTimes,1000);
@@ -135,7 +157,8 @@ if (!localStorage.getItem("prefers")) {
     complexTodo:false,
     storeMessages:false,
     storedMessages:{},
-    schedule:"normal"
+    schedule:"normal",
+    grade:2
   }));
 }
 window.profileLoaded = false;
@@ -225,6 +248,7 @@ const mathSymbols = [
 
 const API_TOKEN = localStorage.getItem("key");
 times.days[times.getDay()] = JSON.parse(localStorage.getItem("prefers")).schedule;
+times.grade = JSON.parse(localStorage.getItem("prefers")).grade;
 //Assignments
 getData("users/self", "", (e) => {
   if(e.errors) {
@@ -484,6 +508,12 @@ function openSchedule() {
   <button onclick="setToday('half')">Half Day</button>
   <button onclick="setToday('delay')">2 Hour Delay</button>
   </p>
+  <p>Grade: ${times.grades[times.grade].name}</p>
+  <p>Set grade to:
+  <select id="setGrade" onchange="setGrade(document.getElementById('setGrade').value)">
+  <option value="${times.grades.map((e,i)=>`${i}" ${i==times.grade?"selected":""}>${e.name}`).join(`</option><option value="`)}</option>
+  </select>
+  </p>
   `,"Schedule");
 }
 function openProfile() {
@@ -666,5 +696,11 @@ function setToday(val) {
   times.days[times.getDay()]=val;
   let prefers = JSON.parse(localStorage.getItem("prefers"));
   prefers.schedule = val;
+  localStorage.setItem("prefers",JSON.stringify(prefers));
+}
+function setGrade(val) {
+  times.grade = val;
+  let prefers = JSON.parse(localStorage.getItem("prefers"));
+  prefers.grade = val;
   localStorage.setItem("prefers",JSON.stringify(prefers));
 }
