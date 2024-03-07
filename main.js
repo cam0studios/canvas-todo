@@ -486,7 +486,7 @@ setInterval(() => {
     e.innerHTML = times.getData().name;
   });
 
-  if(times.getData().timeLeft && 59.5 <= times.getData().timeLeft <= 60.5) {
+  if(times.getData().timeLeft && 59.5 <= times.getData().timeLeft && times.getData().timeLeft <= 60.5) {
     if(Notification.permission == "granted") new Notification("1 minute left!",{body: `You have 1 minute left in period ${times.getData().name}`});
   }
 }, 1000);
