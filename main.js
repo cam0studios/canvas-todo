@@ -249,6 +249,7 @@ const mathSymbols = [
 const API_TOKEN = localStorage.getItem("key");
 times.days[times.getDay()] = JSON.parse(localStorage.getItem("prefers")).schedule || "normal";
 times.grade = JSON.parse(localStorage.getItem("prefers")).grade || 2;
+if(typeof times.grade == "undefined") setGrade(2);
 //Assignments
 getData("users/self", "", (e) => {
   if(e.errors) {
