@@ -247,8 +247,8 @@ const mathSymbols = [
 ];
 
 const API_TOKEN = localStorage.getItem("key");
-times.days[times.getDay()] = JSON.parse(localStorage.getItem("prefers")).schedule || "normal";
-times.grade = JSON.parse(localStorage.getItem("prefers")).grade || 2;
+times.days[times.getDay()] = JSON.parse(localStorage.getItem("prefers")).schedule;
+times.grade = JSON.parse(localStorage.getItem("prefers")).grade;
 if(typeof times.grade == "undefined") setGrade(2);
 //Assignments
 getData("users/self", "", (e) => {
@@ -475,22 +475,16 @@ function popup(content,name,remove) {
 }
 
 setInterval(() => {
-  for(let key in document.getElementsByClassName("timeLeft")) {
-    if(!isNaN(parseInt(key))) {
-      let e = document.getElementsByClassName("timeLeft")[key];
-      if(times.getData().timeLeft) {
-        e.innerHTML = getTime();
-      } else {
-        e.innerHTML = "N/A";
-      }
+  [...document.getElementsByClassName("timeLeft")].forEach((e) => {
+    if(times.getData().timeLeft) {
+      e.innerHTML = getTime();
+    } else {
+      e.innerHTML = "N/A";
     }
-  }
-  for(let key in document.getElementsByClassName("period")) {
-    if(!isNaN(parseInt(key))) {
-      let e = document.getElementsByClassName("period")[key];
-      e.innerHTML = times.getData().name;
-    }
-  }
+  });
+  [...document.getElementsByClassName("period")].forEach((e) => {
+    e.innerHTML = times.getData().name;
+  });
 }, 1000);
 function getTime() {
   let t = times.getHr(times.getData().timeLeft);
