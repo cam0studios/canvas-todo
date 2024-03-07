@@ -112,8 +112,6 @@ if(true) {
       let gradeFull = JSON.parse(JSON.stringify(times.grades[grade]));
       times.allBeginning.forEach((e,i) => gradeFull.periods.unshift(times.allBeginning[times.allBeginning.length-i-1]));
       times.allEnd.forEach((e) => gradeFull.periods.push(e));
-      console.log("start");
-      console.log(gradeFull);
       gradeFull.periods.forEach((e,i)=>{
         let pds = [];
         e.split("-").forEach((pd) => pds.push(schedule[schedule.map(s=>s.name).indexOf(pd)]));
@@ -250,6 +248,8 @@ const API_TOKEN = localStorage.getItem("key");
 times.days[times.getDay()] = JSON.parse(localStorage.getItem("prefers")).schedule;
 times.grade = JSON.parse(localStorage.getItem("prefers")).grade;
 if(typeof times.grade == "undefined") setGrade(2);
+if(Notification.permission != "granted") Notification.requestPermission();
+
 //Assignments
 getData("users/self", "", (e) => {
   if(e.errors) {
@@ -485,6 +485,10 @@ setInterval(() => {
   [...document.getElementsByClassName("period")].forEach((e) => {
     e.innerHTML = times.getData().name;
   });
+
+  if(times.getData().timeLeft && 59.5 <= times.getData().timeLeft <= 60.5) {
+    if(Notification.permission == "granted") new Notification("1 minute left!",{body: `You have 1 minute left in period ${times.getData().name}`});
+  }
 }, 1000);
 function getTime() {
   let t = times.getHr(times.getData().timeLeft);
@@ -674,7 +678,6 @@ function openMath() {
 function updateMath() {
   mathSymbols.forEach((e) => {
     let elem = document.getElementById("math"+e.symbol);
-    console.log(e.search);
     if (elem) {
       if(e.search.includes(document.getElementById("mathSearch").value) || e.name.includes(document.getElementById("mathSearch").value)) {
         elem.style.display = "inline";
