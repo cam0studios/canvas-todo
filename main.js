@@ -92,8 +92,8 @@ if(true) {
     {name:"7",periods:["4-5","6","7-8"]},
     {name:"8",periods:["4-5","6-7","8"]}
   ];
-  times.allBeginning = ["Homeroom","1","2","3"];
-  times.allEnd = ["9","10"];
+  times.allBeginning = ["Homeroom","SET","1","2","3"];
+  times.allEnd = ["9","10","Club"];
 
   times.days = {};
   times.grade = 2;
@@ -114,12 +114,16 @@ if(true) {
       times.allEnd.forEach((e) => gradeFull.periods.push(e));
       gradeFull.periods.forEach((e,i)=>{
         let pds = [];
-        e.split("-").forEach((pd) => pds.push(schedule[schedule.map(s=>s.name).indexOf(pd)]));
-        pds.sort((a,b) => a.startTime-b.startTime);
-        let start = pds[0].startTime;
-        let end = pds[pds.length-1].endTime;
-        if(t>=start && t<=end) {
-          pd = {name:pds.map(p=>p.name).join("-"),startTime:start,endTime:end};
+        e.split("-").forEach((pd) => {
+          if(schedule.map(s=>s.name).includes(pd)) pds.push(schedule[schedule.map(s=>s.name).indexOf(pd)]);
+        });
+        if(pds.length>0) {
+          pds.sort((a,b) => a.startTime-b.startTime);
+          let start = pds[0].startTime;
+          let end = pds[pds.length-1].endTime;
+          if(t>=start && t<=end) {
+            pd = {name:pds.map(p=>p.name).join("-"),startTime:start,endTime:end};
+          }
         }
       });
       if(pd == null) return {name:"Transition"};
@@ -485,8 +489,8 @@ setInterval(() => {
   [...document.getElementsByClassName("period")].forEach((e) => {
     e.innerHTML = times.getData().name;
   });
-
-  if(times.getData().timeLeft && 59.5 <= times.getData().timeLeft && times.getData().timeLeft <= 60.5) {
+  if(Math.round(times.getData().timeLeft) == 60) {
+    console.log(Math.round(times.getData().timeLeft));
     if(Notification.permission == "granted") new Notification("1 minute left!",{body: `You have 1 minute left in period ${times.getData().name}`});
   }
 }, 1000);
