@@ -97,6 +97,7 @@ if(true) {
 
   times.days = {};
   times.grade = 2;
+  times.notified = false;
   //day: {normal,set,half,delay}
   //getData: {name, startTime, endTime}
 
@@ -489,8 +490,10 @@ setInterval(() => {
   [...document.getElementsByClassName("period")].forEach((e) => {
     e.innerHTML = times.getData().name;
   });
-  if(Math.round(times.getData().timeLeft) == 60) {
-    console.log(Math.round(times.getData().timeLeft));
+  if(times.getData().timeLeft > 120) times.notified = false;
+  if(times.getData().timeLeft < 60 && !times.notified) {
+    console.log("notify");
+    times.notified = true;
     if(Notification.permission == "granted") new Notification("1 minute left!",{body: `You have 1 minute left in period ${times.getData().name}`});
   }
 }, 1000);
