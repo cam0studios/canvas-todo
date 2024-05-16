@@ -2,7 +2,7 @@
 A todo site for HCPSS Canvas.
 
 # Features
-Grades - Allows you to see the year-average for each of your classes\
+Grades - Allows you to see the quarter grade for each of your classes\
 Todo - You can see upcoming and late unsubmitted assignments\
 Inbox - You can see your inbox messages\
 Announcements - Allows you to see the most recent announcements from your classes\
