@@ -13,15 +13,18 @@
             margin: auto;
             overflow-x: hidden;
         }
+
         .item {
-            border: 1px solid black;
             background-color: white;
+            border: 1px solid black;
+            border-radius: 2px;
             box-shadow: 0px 0px 2px black;
-            width: 300px;
+            max-width: 300px;
             margin: auto;
             margin-top: 3px;
+            margin-left: 5px;
+            margin-right: 5px;
             margin-bottom: 3px;
-            border-radius: 2px;
             text-align: center;
             display: block;
             cursor: pointer;
@@ -29,23 +32,29 @@
             overflow-x: wrap;
             word-break: break-all;
         }
+
         .item:hover {
             background-color: rgb(245, 245, 245) !important;
         }
+
         .today {
             color: rgb(230, 155, 20) !important;
         }
+
         .missing {
             color: red !important;
         }
+
         .later {
             color: black !important;
         }
+
         p {
             margin: 5px;
             padding: 0;
             font-size: 15px;
         }
+
         h2 {
             color: black;
             font-weight: 700;
@@ -53,6 +62,7 @@
             font-size: 17px;
             margin: 5px;
         }
+
         .unread {
             border-color: rgb(50, 150, 200) !important;
             box-shadow: 0px 0px 3px rgb(50, 150, 200) !important;
@@ -108,18 +118,21 @@
             font-size: 40px;
             color: white;
         }
+
         #sidebar>*>img {
             top: 50%;
             left: 50%;
-            transform: translate(-50%,-50%);
+            transform: translate(-50%, -50%);
             position: absolute;
             border-radius: 100px;
             width: 30px;
         }
+
         #profilePic {
             border: solid white 3px;
             width: 30px !important;
         }
+
         #hcpssOpen {
             width: 80px !important;
         }
@@ -143,21 +156,37 @@
             animation-duration: 0.25s;
             animation-timing-function: ease-in;
         }
+
         #sidebar>*:hover>p {
             left: 65px;
-            opacity:1;
+            opacity: 1;
             animation-name: sidebarHover;
             animation-duration: 0.25s;
             animation-timing-function: ease-out;
         }
 
         @keyframes sidebarHover {
-            from {left: -70px; opacity:0}
-            to {left: 65px; opacity:1}
+            from {
+                left: -70px;
+                opacity: 0
+            }
+
+            to {
+                left: 65px;
+                opacity: 1
+            }
         }
+
         @keyframes sidebarUnhover {
-            from {left: 65px; opacity:1}
-            to {left: -70px; opacity:0}
+            from {
+                left: 65px;
+                opacity: 1
+            }
+
+            to {
+                left: -70px;
+                opacity: 0
+            }
         }
 
         #hcpss {
@@ -165,14 +194,17 @@
         }
 
         #hcpss>p {
-            top:45px;
+            top: 45px;
         }
+
         #profile>p {
             top: 120px;
         }
+
         #schedule>p {
             top: 170px;
         }
+
         #math>p {
             top: 220px;
         }
@@ -186,7 +218,6 @@
             margin: 0;
             z-index: -1;
             text-align: center;
-            align-content: center;
             overflow-y: scroll;
             overflow-x: scroll;
         }
@@ -208,11 +239,17 @@
             display: block;
             background-color: rgb(248, 248, 248);
             z-index: 4;
-            overflow-x: scroll;
-            overflow-y: scroll;
+            overflow: hidden;
             padding: 30px;
             position: fixed;
         }
+
+        .popupContent {
+            width: 100%;
+            height: calc(100%);
+            overflow: scroll;
+        }
+
         .popupBg {
             background-color: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(2px);
@@ -226,12 +263,14 @@
             margin: 0;
             display: flex;
         }
-        .popup > hr {
+
+        .popup>hr {
             margin-left: -20px;
             margin-right: -20px;
             background: transparent;
-            border: 0.1px solid rgba(0,0,0,1);
+            border: 0.1px solid rgba(0, 0, 0, 1);
         }
+
         .popupClose {
             position: fixed;
             right: 10px;
@@ -242,62 +281,81 @@
             background-color: transparent;
             cursor: pointer;
         }
+
         .popupClose:hover {
-            background-color: rgba(150,150,150,0.1);
+            background-color: rgba(150, 150, 150, 0.1);
         }
+
         .popupHeader {
             margin-top: -15px;
             margin-left: 0px;
             margin-bottom: 0px;
         }
 
+        .popupContent>iframe {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: calc(100% - 10px);
+        }
+
         .gradeGood {
-            background-color: rgb(100,200,50)
+            background-color: rgb(100, 200, 50)
         }
+
         .gradeMid {
-            background-color: rgb(100,150,250);
+            background-color: rgb(100, 150, 250);
         }
+
         .gradeBad {
-            background-color: rgb(250,175,50);
+            background-color: rgb(250, 175, 50);
         }
+
         .gradeReallyBad {
-            background-color: rgb(250,50,50);
+            background-color: rgb(250, 50, 50);
         }
+
         .gradeDisplay {
             border-radius: 100px;
-            height:10px;
+            height: 10px;
         }
+
         .gradeDisplayBg {
-            background-color: rgb(235,235,235);
+            background-color: rgb(235, 235, 235);
             border-radius: 100px;
-            height:10px;
-            display:block;
-            margin:10px;
+            height: 10px;
+            display: block;
+            margin: 10px;
             transform: translateX(15px);
         }
 
         .mathSymbol {
             width: 30px;
-            height:30px;
+            height: 30px;
             font-size: 17px;
             display: flexbox;
-            margin:5px;
+            margin: 5px;
             border-radius: 5px;
             border: 1px solid black;
             background-color: white;
         }
+
         .mathSymbol:hover {
             box-shadow: 0px 0px 2px black;
         }
+
         details {
             padding-left: 15px;
         }
+
         summary {
             margin-left: -5px;
         }
+
         .mathIn {
             width: 40px;
         }
+
         .mathLabel {
             width: 20px;
         }
@@ -305,13 +363,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,500;1,500..1000&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,700;1,700..1000&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,500;1,500..1000&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,700;1,700..1000&display=swap"
+        rel="stylesheet">
     <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
 </head>
 
 <body>
-    <script src="https://cdn.jsdelivr.net/npm/eruda" onload="eruda.init()"></script>
     <script src="main.js" defer></script>
     <div id="todo" class="container">
         <h1>To-Do</h1>
@@ -328,7 +387,8 @@
     <div id="sidebar" class="container">
         <div id="hcpss" onclick="window.open('https://hcpss.instructure.com')">
             <!--<span class="material-symbols-outlined">brightness_empty</span>-->
-            <img id="hcpssOpen" src="https://instructure-uploads.s3.amazonaws.com/account_31230000000000001/attachments/1943770/HCPSS-home2.png?AWSAccessKeyId=AKIAJFNFXH2V2O7RPCAA&Expires=1938068198&Signature=NmotABSeWKTiSUM4TdKOlqvPQrU%3D&response-cache-control=Cache-Control%3Amax-age%3D473364000.0%2C%20public&response-expires=473364000.0">
+            <img id="hcpssOpen"
+                src="https://instructure-uploads.s3.amazonaws.com/account_31230000000000001/attachments/1943770/HCPSS-home2.png?AWSAccessKeyId=AKIAJFNFXH2V2O7RPCAA&Expires=1938068198&Signature=NmotABSeWKTiSUM4TdKOlqvPQrU%3D&response-cache-control=Cache-Control%3Amax-age%3D473364000.0%2C%20public&response-expires=473364000.0">
             <p>Open Canvas</p>
         </div>
         <div id="profile" onclick="openProfile()">
