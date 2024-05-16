@@ -352,7 +352,7 @@ getData("users/self/courses", "enrollment_state=active&per_page=100&include%5B%5
     let elem = document.createElement("div");
     elem.setAttribute("class", "item");
     elem.setAttribute("onclick", `window.open("https://hcpss.instructure.com/courses/${course.id}/#grades","_blank").focus()`);
-    elem.innerHTML = `<h2>${name}</h2><p>${score == null ? "N/A" : (score + "%")}</p>${score == null ? "" : `<div class="gradeDisplayBg" style="width:calc(25vw - 77px)"><div class="gradeDisplay ${score <= 77.5 ? "gradeReallyBad" : score <= 87.5 ? "gradeBad" : score <= 92.5 ? "gradeMid" : "gradeGood"}" style="width:calc(calc((25vw - 77px)*${score / 100}))"></div></div>`}`;
+    elem.innerHTML = `<h2>${name}</h2><p>${score == null ? "N/A" : (score + "%")}</p>${score == null ? "" : `<div class="gradeDisplayBg" style="width:calc(25vw - 77px)"><div class="gradeDisplay ${score <= 77.5 ? "gradeReallyBad" : score <= 87.5 ? "gradeBad" : score <= 92.5 ? "gradeMid" : "gradeGood"}" style="width:calc(calc((25vw - 77px)*${Math.min(score, 100) / 100}))"></div></div>`}`;
     document.getElementById("grades").append(elem);
   });
 }, (err) => { console.error(err) });
