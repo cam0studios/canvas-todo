@@ -1,0 +1,355 @@
+body {
+	background-color: rgb(248, 248, 248);
+	font-family: "Nunito", sans-serif;
+	display: inline-block;
+	margin: auto;
+	overflow-x: hidden;
+}
+
+.item {
+	background-color: white;
+	border: 1px solid black;
+	border-radius: 2px;
+	box-shadow: 0px 0px 2px black;
+	max-width: min(300px, calc(25vw - 25px));
+	margin: auto;
+	margin-top: 3px;
+	margin-bottom: 3px;
+	text-align: center;
+	display: block;
+	cursor: pointer;
+	padding-top: 5px;
+	overflow-x: wrap;
+	word-break: break-all;
+}
+
+.item:hover {
+	background-color: rgb(245, 245, 245) !important;
+}
+
+.today {
+	color: rgb(230, 155, 20) !important;
+}
+
+.missing {
+	color: red !important;
+}
+
+.later {
+	color: black !important;
+}
+
+p {
+	margin: 5px;
+	padding: 0;
+	font-size: 15px;
+}
+
+h2 {
+	color: black;
+	font-weight: 700;
+	text-decoration: none;
+	font-size: 17px;
+	margin: 5px;
+}
+
+.unread {
+	border-color: rgb(50, 150, 200) !important;
+	box-shadow: 0px 0px 3px rgb(50, 150, 200) !important;
+	background-color: rgb(245, 250, 255);
+}
+
+.unread:hover {
+	background-color: rgb(235, 240, 245) !important;
+}
+
+#todo {
+	left: 60px;
+}
+
+#grades {
+	left: calc(25% + 45px);
+}
+
+#announcements {
+	left: calc(50% + 30px);
+}
+
+#inbox {
+	left: calc(75% + 15px);
+}
+
+#sidebar {
+	left: 0;
+	width: 60px !important;
+	background-color: rgb(70, 75, 80);
+	overflow-x: hidden;
+}
+
+#sidebar>* {
+	margin: auto;
+	width: 60px;
+	height: 50px;
+	position: relative;
+	cursor: pointer;
+	background-color: rgb(70, 75, 80);
+	transition: 0.1s;
+}
+
+#sidebar>*:hover {
+	background-color: rgb(60, 65, 70);
+}
+
+#sidebar>*>span {
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	position: absolute;
+	font-size: 40px;
+	color: white;
+}
+
+#sidebar>*>img {
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	position: absolute;
+	border-radius: 100px;
+	width: 30px;
+}
+
+#profilePic {
+	border: solid white 3px;
+	width: 30px !important;
+}
+
+#hcpssOpen {
+	width: 80px !important;
+}
+
+#sidebar>*>p {
+	font-size: 15px;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 5px;
+	padding-bottom: 10px;
+	border-radius: 5px;
+	height: 15px;
+	left: -65px;
+	opacity: 0;
+	transform: translateY(-50%);
+	background-color: rgb(70, 150, 240);
+	color: white;
+	position: fixed;
+	z-index: 10;
+	animation-name: sidebarUnhover;
+	animation-duration: 0.25s;
+	animation-timing-function: ease-in;
+}
+
+#sidebar>*:hover>p {
+	left: 65px;
+	opacity: 1;
+	animation-name: sidebarHover;
+	animation-duration: 0.25s;
+	animation-timing-function: ease-out;
+}
+
+@keyframes sidebarHover {
+	from {
+		left: -70px;
+		opacity: 0
+	}
+
+	to {
+		left: 65px;
+		opacity: 1
+	}
+}
+
+@keyframes sidebarUnhover {
+	from {
+		left: 65px;
+		opacity: 1
+	}
+
+	to {
+		left: -70px;
+		opacity: 0
+	}
+}
+
+#hcpss {
+	height: 100px;
+}
+
+#hcpss>p {
+	top: 45px;
+}
+
+#profile>p {
+	top: 120px;
+}
+
+#schedule>p {
+	top: 170px;
+}
+
+#math>p {
+	top: 220px;
+}
+
+.container {
+	position: absolute;
+	top: 0;
+	display: block;
+	width: calc(25% - 15px);
+	height: 100%;
+	margin: 0;
+	z-index: -1;
+	text-align: center;
+	overflow-y: scroll;
+	overflow-x: scroll;
+}
+
+h1 {
+	font-size: 20;
+	font-weight: normal;
+	margin: 0;
+}
+
+.popup {
+	border: 1px solid black;
+	border-radius: 10px;
+	width: 75%;
+	height: 75%;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	display: block;
+	background-color: rgb(248, 248, 248);
+	z-index: 4;
+	overflow: hidden;
+	padding: 30px;
+	position: fixed;
+}
+
+.popupContent {
+	width: 100%;
+	height: calc(100%);
+	overflow: scroll;
+}
+
+.popupBg {
+	background-color: rgba(0, 0, 0, 0.5);
+	backdrop-filter: blur(2px);
+	position: fixed;
+	align-content: center;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 3;
+	margin: 0;
+	display: flex;
+}
+
+.popup>hr {
+	margin-left: -20px;
+	margin-right: -20px;
+	background: transparent;
+	border: 0.1px solid rgba(0, 0, 0, 1);
+}
+
+.popupClose {
+	position: fixed;
+	right: 10px;
+	top: 10px;
+	font-size: 20px !important;
+	border-radius: 25px;
+	padding: 5px;
+	background-color: transparent;
+	cursor: pointer;
+}
+
+.popupClose:hover {
+	background-color: rgba(150, 150, 150, 0.1);
+}
+
+.popupHeader {
+	margin-top: -15px;
+	margin-left: 0px;
+	margin-bottom: 0px;
+}
+
+.popupContent>iframe {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: calc(100% - 10px);
+}
+
+.gradeGood {
+	background-color: rgb(100, 200, 50)
+}
+
+.gradeMid {
+	background-color: rgb(50, 160, 210);
+}
+
+.gradeBad {
+	background-color: rgb(250, 175, 50);
+}
+
+.gradeReallyBad {
+	background-color: rgb(250, 50, 50);
+}
+
+.gradeTerrible {
+	background-color: rgb(150, 50, 0);
+}
+
+.gradeDisplay {
+	border-radius: 100px;
+	height: 10px;
+}
+
+.gradeDisplayBg {
+	background-color: rgb(235, 235, 235);
+	border-radius: 100px;
+	height: 10px;
+	display: block;
+	margin: 10px;
+	transform: translateX(15px);
+}
+
+.mathSymbol {
+	width: 30px;
+	height: 30px;
+	font-size: 17px;
+	display: flexbox;
+	margin: 5px;
+	border-radius: 5px;
+	border: 1px solid black;
+	background-color: white;
+}
+
+.mathSymbol:hover {
+	box-shadow: 0px 0px 2px black;
+}
+
+details {
+	padding-left: 15px;
+}
+
+summary {
+	margin-left: -5px;
+}
+
+.mathIn {
+	width: 40px;
+}
+
+.mathLabel {
+	width: 20px;
+}
