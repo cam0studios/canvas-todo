@@ -160,13 +160,16 @@ if (true) {
 		}
 	});
 
-	times.user = JSON.parse(localStorage.getItem("timesUser")) || {
+	times.user = JSON.parse(localStorage.getItem("timesUser")) || {};
+	checkIfHas(times.user, {
 		grade: 9,
 		abDay: 0,
 		schedule: "normal",
 		aLunch: "A",
-		bLunch: "A"
-	};
+		bLunch: "A",
+		notify: true
+	});
+
 	times.grades = [];
 	times.schools.forEach((school, i) => {
 		for (let grade = school.grades[0]; grade <= school.grades[1]; grade++) times.grades.push(grade);
@@ -230,16 +233,6 @@ if (!localStorage.getItem("key")) {
 }
 if (!localStorage.getItem("users")) {
 	localStorage.setItem("users", "[]");
-}
-if (!localStorage.getItem("prefers")) {
-	localStorage.setItem("prefers", JSON.stringify({
-		complexGrades: false,
-		complexTodo: false,
-		storeMessages: false,
-		storedMessages: {},
-		schedule: "normal",
-		grade: 2
-	}));
 }
 window.profileLoaded = false;
 const mathSymbols = [
@@ -327,7 +320,7 @@ const mathSymbols = [
 ];
 
 const API_TOKEN = localStorage.getItem("key");
-if (Notification.permission != "granted") Notification.requestPermission();
+if (Notification.permission != "granted" && times.user.notify) Notification.requestPermission();
 
 //Assignments
 getData("users/self", "", (e) => {
@@ -432,38 +425,22 @@ getData("users/self/courses", "enrollment_state=active&per_page=100&include%5B%5
 
 getData("conversations", "per_page=10", (convos) => {
 	if (!convos.errors) {
-		if (JSON.parse(localStorage.getItem("prefers")).storeMessages) {
-			for (let id in JSON.parse(localStorage.getItem("prefers")).storedMessages) {
-				let e = JSON.parse(localStorage.getItem("prefers")).storedMessages[id];
-				console.log(e);
-				if (!convos.find(e2 => e2.id == id)) {
-					let f = JSON.parse(localStorage.getItem("prefers"));
-					delete f.storedMessages[id];
-					localStorage.setItem("prefers", JSON.stringify(f));
-				}
-			}
-		}
 		convos.forEach((e) => {
 			let elem = document.createElement("div");
 			elem.setAttribute("class", "item " + e.workflow_state);
 			//elem.setAttribute("onclick", `window.open("https://hcpss.instructure.com/conversations","_blank").focus()`);
 			elem.onclick = function () {
-				if (Object.hasOwn(JSON.parse(localStorage.getItem("prefers")).storedMessages, e.id)) {
-					let mess = JSON.parse(localStorage.getItem("prefers")).storedMessages[e.id]
-					popup(mess.html, mess.subject);
-				} else {
-					popup("", "loading...");
-					getData(`conversations/${e.id}`, "", (convo) => {
-						removePopup();
-						console.log(convo);
-						let ms = convo.messages.sort((a, b) => { return new Date(a.created_at).getTime() - new Date(b.created_at).getTime() });
-						let html = `<p>${ms.map(e2 => convo.participants.find(f => { return f.id == e2.author_id }).name + "<br>" + e2.body).join("</p><p>")}</p>`;
-						popup(html, convo.subject);
-						let pre = JSON.parse(localStorage.getItem("prefers"));
-						pre.storedMessages[e.id] = { html: html, subject: convo.subject };
-						localStorage.setItem("prefers", JSON.stringify(pre));
-					});
-				}
+				popup("", "loading...");
+				getData(`conversations/${e.id}`, "", (convo) => {
+					removePopup();
+					console.log(convo);
+					let ms = convo.messages.sort((a, b) => { return new Date(a.created_at).getTime() - new Date(b.created_at).getTime() });
+					let html = `<p>${ms.map(e2 => convo.participants.find(f => { return f.id == e2.author_id }).name + "<br>" + e2.body).join("</p><p>")}</p>`;
+					popup(html, convo.subject);
+					let pre = JSON.parse(localStorage.getItem("prefers"));
+					pre.storedMessages[e.id] = { html: html, subject: convo.subject };
+					localStorage.setItem("prefers", JSON.stringify(pre));
+				});
 			};
 			elem.innerHTML = `<h2>${e.subject}</h2><p>${e.context_name}</p><p>${new Date(e.last_message_at).toLocaleString("en", { timeStyle: "short", dateStyle: "full" })}</p><p>${e.last_message}</p>`;
 			document.getElementById("inbox").append(elem);
@@ -568,7 +545,7 @@ setInterval(() => {
 	if (left.timeLeft < 60 && !times.user.notified) {
 		console.log("notify");
 		times.user.notified = true;
-		if (Notification.permission == "granted") new Notification("1 minute left!", { body: `You have 1 minute left in ${left.name}` });
+		if (Notification.permission == "granted" && times.user.notify) new Notification("1 minute left!", { body: `You have 1 minute left in ${left.name}` });
 	}
 }, 1000);
 function openSchedule() {
@@ -599,6 +576,10 @@ function openSchedule() {
 			${Object.keys(times.schools[times.user.school].lunches.getCurrent()).map(lunch => `<option value=${lunch} ${lunch == (day == "B" ? times.user.bLunch : times.user.aLunch) ? `selected=""` : ""}>${lunch}</option>`).join("")}
 		</select>
 		`).join(", ")}
+	</p>
+	<p>
+		<input type="checkbox" id="setNotify" ${times.user.notify ? `checked=""` : ""}" onchange="setNotify(document.getElementById('setNotify').checked)"></input>
+		1 Minute Notifications
 	</p>
 	`: ""}
   `, "Schedule");
@@ -633,31 +614,7 @@ function openProfile() {
     <p>Go to Canvas and click your profile picture, hit Settings. Once the page loads, scroll down and hit New Access Token. Set the purpose to anything you like, and hit Generate. Copy the long string of text (ex: 1234~qwertyuiop...) and paste it into the sign in prompt here.</p>
     `;
 	}
-	content += `
-  <br/>
-  <input type="checkbox" name="storeMsgCheck" id="storeMessagesCheck"></input>
-  <label for="storeMsgCheck">Store Messages</label>
-  <br>
-  <button id="clearMessagesBtn">Clear Cached Messages</button/>
-  `;
-	popup(content, "Settings", () => {
-		let f = JSON.parse(localStorage.getItem("prefers"));
-		f.storeMessages = document.getElementById("storeMessagesCheck").checked;
-		localStorage.setItem("prefers", JSON.stringify(f));
-	});
-	document.getElementById("storeMessagesCheck").checked = JSON.parse(localStorage.getItem("prefers")).storeMessages;
-	if (!JSON.parse(localStorage.getItem("prefers")).storeMessages) {
-		document.getElementById("clearMessagesBtn").remove();
-		let f = JSON.parse(localStorage.getItem("prefers"));
-		f.storedMessages = {};
-		localStorage.setItem("prefers", JSON.stringify(f));
-	} else {
-		document.getElementById("clearMessagesBtn").addEventListener("click", () => {
-			let f = JSON.parse(localStorage.getItem("prefers"));
-			f.storedMessages = {};
-			localStorage.setItem("prefers", JSON.stringify(f));
-		});
-	}
+	popup(content, "Profile");
 }
 function openMath() {
 	let p = "";
@@ -794,4 +751,19 @@ function setLunch(lunch, val) {
 function setDay(val) {
 	times.user.abDay = val;
 	times.saveUser();
+}
+function setNotify(val) {
+	times.user.notify = val;
+	times.saveUser();
+}
+
+function checkIfHas(data, defaults) {
+	for (let key in defaults) {
+		let def = defaults[key];
+		if (!key in data) data[key] = def;
+	}
+	for (let key in data) {
+		if (!key in defaults) delete data[key];
+	}
+	return data;
 }
