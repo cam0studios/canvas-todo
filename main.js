@@ -79,7 +79,7 @@ if (true) {
 		}
 		getFirst() {
 			let schedule = this.getCurrent();
-			let ret = [0, 0];
+			let ret = [99999, 99999];
 			for (let periodName in schedule) {
 				let period = schedule[periodName];
 				if (period[0] < ret[0]) ret = period;
