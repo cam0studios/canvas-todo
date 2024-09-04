@@ -30,19 +30,20 @@ if (true) {
 		if (hour < 5) hour += 12;
 		return times.getTime(hour, min);
 	}
-	times.formatTime = (time = 0) => {
+	times.formatTime = (time = 0, digits = 3) => {
 		let ret = [];
 		let hour = times.getHour(time);
 		let min = times.getMinute(time);
 		let sec = times.getSecond(time);
 		let ms = times.getMillisecond(time);
-		ret.push(hour);
-		ret.push(times.makeDigits(min, 2));
-		if (sec > 0 || ms > 0) ret.push(times.makeDigits(sec, 2));
-		if (ms > 0) ret.push(times.makeDigits(ms, 4));
+		if (digits >= 1) ret.push(hour);
+		if (digits >= 2) ret.push(times.makeDigits(min, 2));
+		if (digits >= 3) ret.push(times.makeDigits(sec, 2));
+		if (digits >= 4) ret.push(times.makeDigits(ms, 4));
 		return ret.join(":");
 	}
 	times.getCurrentTime = () => {
+		// if ("debugTime" in times) return times.debugTime;
 		let date = new Date();
 		return times.getTime(date.getHours(), date.getMinutes(), date.getSeconds());
 	}
@@ -79,19 +80,19 @@ if (true) {
 		}
 		getFirst() {
 			let schedule = this.getCurrent();
-			let ret = [99999, 99999];
+			let ret = { period: [99999, 99999], periodName: "" };
 			for (let periodName in schedule) {
 				let period = schedule[periodName];
-				if (period[0] < ret[0]) ret = period;
+				if (period[0] < ret.period[0]) ret = { period, periodName };
 			}
 			return ret;
 		}
 		getLast() {
 			let schedule = this.getCurrent();
-			let ret = [0, 0];
+			let ret = { period: [0, 0], periodName: "" };
 			for (let periodName in schedule) {
 				let period = schedule[periodName];
-				if (period[1] > ret[1]) ret = period;
+				if (period[1] > ret.period[1]) ret = { period, periodName };
 			}
 			return ret;
 		}
@@ -191,8 +192,8 @@ if (true) {
 		let school = times.schools[times.user.school];
 		let currentPeriod;
 		let currentTime = times.getCurrentTime();
-		let started = currentTime >= school.timeSheet.getFirst()[0];
-		let ended = currentTime >= school.timeSheet.getLast()[1];
+		let started = currentTime >= school.timeSheet.getFirst().period[0];
+		let ended = currentTime >= school.timeSheet.getLast().period[1];
 		if (started && !ended) {
 			school.timeSheet.forEach((periodName, period) => {
 				if (currentTime >= period[0] && currentTime <= period[1]) currentPeriod = { type: 0, name: periodName, period };
@@ -210,8 +211,42 @@ if (true) {
 		}
 		return null;
 	}
+
+	times.getNextPeriod = () => {
+		let school = times.schools[times.user.school];
+		let currentTime = times.getCurrentTime();
+		let started = currentTime >= school.timeSheet.getFirst().period[0];
+		let ended = currentTime >= school.timeSheet.getLast().period[1];
+		let last = currentTime >= school.timeSheet.getLast().period[0];
+		let leastTimeLeft = 9999999;
+		let nextPeriod;
+		if (last) return { type: "period", times: school.timeSheet.getLast().period, name: "Dismissal" };
+		if (started && !ended) {
+			school.timeSheet.forEach((periodName, period) => {
+				if (period[0] - currentTime < leastTimeLeft && period[0] - currentTime > 0) {
+					nextPeriod = { type: 0, name: periodName, period };
+					leastTimeLeft = period[0] - currentTime;
+				}
+			});
+			let lunch = school.lunches.getCurrent()[times.user.abDay == 0 ? times.user.aLunch : times.user.bLunch];
+			if (lunch[0] - currentTime < leastTimeLeft && lunch[0] - currentTime > 0) {
+				nextPeriod = { type: 1, name: times.user.abDay == 0 ? times.user.aLunch : times.user.bLunch, period: lunch };
+				leastTimeLeft = lunch[0] - currentTime;
+			}
+			if (!nextPeriod) return { type: "transition" };
+			return { type: "period", times: nextPeriod.period, name: (nextPeriod.type == 0 ? "Period " : "Lunch ") + nextPeriod.name };
+		}
+		if (ended) {
+			return { type: "after" };
+		}
+		if (!started) {
+			return { type: "before" };
+		}
+		return null;
+	}
 	times.getTimeLeft = () => {
 		let current = times.getCurrentPeriod();
+		let next = times.getNextPeriod();
 		if (current.type == "after") return { type: "none", name: "After school" };
 		if (current.type == "before") return { type: "none", name: "Before school" };
 		if (current.type == "transition") return { type: "none", name: "Transition" };
@@ -220,8 +255,7 @@ if (true) {
 			type: "period",
 			name: current.name,
 			times: current.times,
-			timeLeft: current.times[1] - time,
-			timeIn: time - current.times[0]
+			timeLeft: Math.min(current.times[1] - time, next.times[0] - time)
 		}
 	}
 }
@@ -533,7 +567,7 @@ setInterval(() => {
 	let left = times.getTimeLeft();
 	[...document.getElementsByClassName("timeLeft")].forEach((e) => {
 		if (left.type == "period") {
-			e.innerHTML = times.formatTime(left.timeLeft);
+			e.innerHTML = times.formatTime(left.timeLeft, 3);
 		} else {
 			e.innerHTML = "N/A";
 		}
