@@ -43,7 +43,7 @@ if (true) {
 		return ret.join(":");
 	}
 	times.getCurrentTime = () => {
-		// if ("debugTime" in times) return times.debugTime;
+		if ("debugTime" in times) return times.debugTime;
 		let date = new Date();
 		return times.getTime(date.getHours(), date.getMinutes(), date.getSeconds());
 	}
@@ -168,7 +168,8 @@ if (true) {
 		schedule: "normal",
 		aLunch: "A",
 		bLunch: "A",
-		notify: true
+		notify: true,
+		lastChecked: new Date().getDate()
 	});
 
 	times.grades = [];
@@ -766,29 +767,49 @@ function updateMath() {
 		}
 	});
 }
+
 function copy(val) {
 	navigator.clipboard.writeText(val);
 }
+
+function checkABDay() {
+	if (new Date().getDate() != times.user.lastChecked) {
+		if (new Date().getDate() > times.user.lastChecked) times.user.abDay += new Date().getDate() - times.user.lastChecked;
+		else times.user.abDay++;
+		times.user.abDay %= 2;
+		times.user.lastChecked = new Date().getDate();
+		times.saveUser();
+		console.log(`Set A/B day to ${["A", "B"][times.user.abDay]} (auto)`);
+	}
+}
+checkABDay();
+setInterval(checkABDay, 60000);
+
 function setSchedule(val) {
 	times.user.schedule = val;
 	times.saveUser();
+	console.log(`Set schedule to ${val}`);
 }
 function setGrade(val) {
 	times.user.grade = parseInt(val);
 	times.updateUser();
 	times.saveUser();
+	console.log(`Set grade to ${val}`);
 }
 function setLunch(lunch, val) {
 	times.user[`${lunch.toLowerCase()}Lunch`] = val;
 	times.saveUser();
+	console.log(`Set ${lunch} lunch to ${val}`);
 }
 function setDay(val) {
 	times.user.abDay = val;
 	times.saveUser();
+	console.log(`Set A/B day to ${val}`);
 }
 function setNotify(val) {
 	times.user.notify = val;
 	times.saveUser();
+	console.log(`Set notifications to ${val}`);
 }
 
 function checkIfHas(data, defaults) {
