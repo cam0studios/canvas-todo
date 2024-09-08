@@ -815,10 +815,10 @@ function setNotify(val) {
 function checkIfHas(data, defaults) {
 	for (let key in defaults) {
 		let def = defaults[key];
-		if (!key in data) data[key] = def;
+		if (!(key in data)) data[key] = def;
 	}
 	for (let key in data) {
-		if (!key in defaults) delete data[key];
+		if (!(key in defaults)) delete data[key];
 	}
 	return data;
 }
