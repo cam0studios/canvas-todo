@@ -134,7 +134,7 @@ if (true) {
 			"3": ["11:00", "11:30"],
 			"4": ["11:35", "1:35"],
 			"5": ["1:40", "2:05"],
-			"6": ["2:35"]
+			"6": ["2:10", "2:35"]
 		}
 	});
 	times.schools[1].lunches = new times.TimeSheet({
@@ -221,7 +221,7 @@ if (true) {
 		let last = currentTime >= school.timeSheet.getLast().period[0];
 		let leastTimeLeft = 9999999;
 		let nextPeriod;
-		if (last) return { type: "period", times: school.timeSheet.getLast().period, name: "Dismissal" };
+		if (last) return { type: "period", times: new Array(2).fill(school.timeSheet.getLast().period[1]), name: "Dismissal" };
 		if (started && !ended) {
 			school.timeSheet.forEach((periodName, period) => {
 				if (period[0] - currentTime < leastTimeLeft && period[0] - currentTime > 0) {
@@ -418,7 +418,7 @@ getData("users/self/favorites/courses", "per_page=100", (courses) => {
 					elem.setAttribute("class", "item");
 					//elem.setAttribute("onclick", `window.open("${e.url}","_blank").focus()`);
 					elem.addEventListener("click", () => {
-						popup(`<iframe src="data:text/html,${encodeURIComponent(e.message)}" frameborder=0>`, `${e.title} - ${e.author.display_name}`);
+						popup(`<iframe src="data:text/html;charset=utf8,${encodeURIComponent(e.message)}" frameborder=0>`, `${e.title} - ${e.author.display_name}`);
 					});
 					let m = e.message.replaceAll(/<[^>]*>/ig, " ").replaceAll("&nbsp;", " ").replaceAll("↵", " ").trim();
 					elem.innerHTML = `<h2>${e.title}</h2><p>${e.author.display_name}</p><p>${new Date(e.created_at).toLocaleString("en", { timeStyle: "short", dateStyle: "full" })}</p><p>${m.substring(0, 150)}${m.length > 150 ? "..." : ""}</p>`;
@@ -451,7 +451,7 @@ getData("users/self/courses", "enrollment_state=active&per_page=100&include%5B%5
 		if (name == null) name = course.name;
 		let elem = document.createElement("div");
 		elem.setAttribute("class", "item");
-		elem.setAttribute("onclick", `window.open("https://hcpss.instructure.com/courses/${course.id}/#grades","_blank").focus()`);
+		elem.setAttribute("onclick", `window.open("https://hcpss.instructure.com/courses/${course.id}/grades","_blank").focus()`);
 		let width = "min(calc(25vw - 77px), 250px)";
 		elem.innerHTML = `<h2>${name}</h2><p>${score == null ? "N/A" : (score + "%")}</p>${score == null ? "" : `<div class="gradeDisplayBg" style="width:${width}"><div class="gradeDisplay ${score <= 67.5 ? "gradeTerrible" : score <= 77.5 ? "gradeReallyBad" : score <= 87.5 ? "gradeBad" : score <= 95 ? "gradeMid" : "gradeGood"}" style="width:calc(${width} * ${Math.min(score, 100) / 100})"></div></div>`}`;
 		document.getElementById("grades").append(elem);
@@ -470,7 +470,7 @@ getData("conversations", "per_page=10", (convos) => {
 					removePopup();
 					console.log(convo);
 					let ms = convo.messages.sort((a, b) => { return new Date(a.created_at).getTime() - new Date(b.created_at).getTime() });
-					let html = `<p>${ms.map(e2 => convo.participants.find(f => { return f.id == e2.author_id }).name + "<br>" + e2.body).join("</p><p>")}</p>`;
+					let html = `<p>${ms.map(e2 => `<b>${convo.participants.find(f => { return f.id == e2.author_id }).name}</b> - ${new Date(e2.created_at).toLocaleString("en", { timeStyle: "short", dateStyle: "full" })}<br><br>${e2.body}`).join("</p><p>").replaceAll("\n", "<br>")}</p>`;
 					popup(html, convo.subject);
 					let pre = JSON.parse(localStorage.getItem("prefers"));
 					pre.storedMessages[e.id] = { html: html, subject: convo.subject };
