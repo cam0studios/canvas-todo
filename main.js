@@ -641,7 +641,7 @@ function openProfile() {
 			content += `<div id="user${i}"><button onclick="localStorage.setItem('key','${e.key}');location.reload()">${e.name}</button> <button onclick="p=JSON.parse(localStorage.getItem('users'));p.splice(${i},1);localStorage.setItem('users',JSON.stringify(p));document.getElementById('user${i}').remove()">x</button> </div>`;
 		});
 		content += `
-    <button onclick="p=JSON.parse(localStorage.getItem('users'));p.push({name:prompt('name'),key:prompt('token')});localStorage.setItem('users',JSON.stringify(p));location.reload()">Add user</button>
+    <button onclick="p=JSON.parse(localStorage.getItem('users'));let n = prompt('name');let k = prompt('token');p.push({name:n,key:k});localStorage.setItem('users',JSON.stringify(p));localStorage.setItem('key',k);location.reload()">Add user</button>
     <br/>
     <button onclick='localStorage.setItem("key", prompt("API Token?"));location.reload()'>Sign in</button>
     <br/>

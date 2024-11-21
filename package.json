@@ -1,0 +1,25 @@
+{
+  "name": "canvas-todo",
+  "version": "0.4.0",
+  "description": "A simple todo list website integrating with HCPSS Canvas",
+  "main": "main.js",
+  "scripts": {
+    "build": "esbuild main.js --bundle --outdir=./dist --sourcemap",
+    "build-watch": "esbuild main.js --bundle --outdir=./dist --watch --sourcemap --format=esm",
+    "dev": "concurrently \"esbuild --serve --servedir=./\" \"bun run build-watch\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cam0studios/canvas-todo.git"
+  },
+  "author": "cam0studios",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cam0studios/canvas-todo/issues"
+  },
+  "homepage": "https://github.com/cam0studios/canvas-todo#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "esbuild": "^0.24.0"
+  }
+}
