@@ -266,6 +266,87 @@ if (!localStorage.getItem("users")) {
   localStorage.setItem("users", "[]");
 }
 window.profileLoaded = false;
+var mathSymbols = [
+  { symbol: "\u25B3", search: "triangle", name: "triangle" },
+  { symbol: "\u2220", search: "angle", name: "angle" },
+  { symbol: "\xB1", search: "plus/minus +-", name: "plus/minus" },
+  { symbol: "\u2260", search: "not equal != inequality", name: "not equal" },
+  { symbol: "\u2245", search: "congruent =", name: "congruent" },
+  { symbol: "\u2248", search: "approximately equal about equal = similar", name: "similar" },
+  { symbol: "\xBA", search: "^0 to the 0 superscript 0", name: "superscript 0" },
+  { symbol: "\xB9", search: "^1 to the 1 superscript 1", name: "superscript 1" },
+  { symbol: "\xB2", search: "^2 to the 2 superscript 2 squared", name: "superscript 2" },
+  { symbol: "\xB3", search: "^3 to the 3 superscript 3 cubed", name: "superscript 3" },
+  { symbol: "\u2074", search: "^4 to the 4 superscript 4", name: "superscript 4" },
+  { symbol: "\u2075", search: "^5 to the 5 superscript 5", name: "superscript 5" },
+  { symbol: "\u2076", search: "^6 to the 6 superscript 6", name: "superscript 6" },
+  { symbol: "\u2077", search: "^7 to the 7 superscript 7", name: "superscript 7" },
+  { symbol: "\u2078", search: "^8 to the 8 superscript 8", name: "superscript 8" },
+  { symbol: "\u2079", search: "^9 to the 9 superscript 9", name: "superscript 9" },
+  { symbol: "\u207A", search: "superscript plus exponent^+", name: "superscript +" },
+  { symbol: "\u207B", search: "superscript minus exponent superscript negative exponent ^-", name: "superscript -" },
+  { symbol: "\u207D", search: "superscript parentheses exponent parentheses ^(", name: "superscript (" },
+  { symbol: "\u207E", search: "superscript parentheses exponent parentheses ^)", name: "superscript )" },
+  { symbol: "\u2265", search: "greater than or equal to >=", name: "greater than or equal to" },
+  { symbol: "\u2264", search: "less than or equal to <=", name: "less than or equal to" },
+  { symbol: "\xD7", search: "times x * multiply", name: "times x" },
+  { symbol: "\u22C5", search: "times x * multiply", name: "times dot" },
+  { symbol: "\xF7", search: "divided by /", name: "divided" },
+  { symbol: "\xB0", search: "degrees *", name: "degrees" },
+  { symbol: "\u221E", search: "infinity", name: "infinity" },
+  { symbol: "\u2225", search: "parallel to ||", name: "parallel" },
+  { symbol: "\u22A5", search: "perpendicular to -|-", name: "perpendicular" },
+  { symbol: "\u221A", search: "sqrt square root", name: "square root" },
+  { symbol: "\u03B1", search: "greek letter", name: "lowercase alpha" },
+  { symbol: "\u03B2", search: "greek letter", name: "lowercase beta" },
+  { symbol: "\u03B3", search: "greek letter", name: "lowercase gamma" },
+  { symbol: "\u03B4", search: "greek letter", name: "lowercase delta" },
+  { symbol: "\u03B5", search: "greek letter", name: "lowercase epsilon" },
+  { symbol: "\u03B6", search: "greek letter", name: "lowercase zeta" },
+  { symbol: "\u03B7", search: "greek letter", name: "lowercase eta" },
+  { symbol: "\u03B8", search: "greek letter", name: "lowercase theta" },
+  { symbol: "\u03B9", search: "greek letter", name: "lowercase iota" },
+  { symbol: "\u03BA", search: "greek letter", name: "lowercase kappa" },
+  { symbol: "\u03BB", search: "greek letter", name: "lowercase lambda" },
+  { symbol: "\u03BC", search: "greek letter", name: "lowercase mu" },
+  { symbol: "\u03BD", search: "greek letter", name: "lowercase nu" },
+  { symbol: "\u03BE", search: "greek letter", name: "lowercase xi" },
+  { symbol: "\u03BF", search: "greek letter", name: "lowercase omicron" },
+  { symbol: "\u03C0", search: "greek letter", name: "lowercase pi" },
+  { symbol: "\u03C1", search: "greek letter", name: "lowercase rho" },
+  { symbol: "\u03C3", search: "greek letter", name: "lowercase sigma" },
+  { symbol: "\u03C4", search: "greek letter", name: "lowercase tau" },
+  { symbol: "\u03C5", search: "greek letter", name: "lowercase upsilon" },
+  { symbol: "\u03C6", search: "greek letter", name: "lowercase phi" },
+  { symbol: "\u03C7", search: "greek letter", name: "lowercase chi" },
+  { symbol: "\u03C8", search: "greek letter", name: "lowercase psi" },
+  { symbol: "\u03C9", search: "greek letter", name: "lowercase omega" },
+  { symbol: "\u0391", search: "greek letter", name: "uppercase alpha" },
+  { symbol: "\u0392", search: "greek letter", name: "uppercase beta" },
+  { symbol: "\u0393", search: "greek letter", name: "uppercase gamma" },
+  { symbol: "\u0394", search: "greek letter", name: "uppercase delta" },
+  { symbol: "\u0395", search: "greek letter", name: "uppercase epsilon" },
+  { symbol: "\u0396", search: "greek letter", name: "uppercase zeta" },
+  { symbol: "\u0397", search: "greek letter", name: "uppercase eta" },
+  { symbol: "\u0398", search: "greek letter", name: "uppercase theta" },
+  { symbol: "\u0399", search: "greek letter", name: "uppercase iota" },
+  { symbol: "\u039A", search: "greek letter", name: "uppercase kappa" },
+  { symbol: "\u039B", search: "greek letter", name: "uppercase lambda" },
+  { symbol: "\u039C", search: "greek letter", name: "uppercase mu" },
+  { symbol: "\u039D", search: "greek letter", name: "uppercase nu" },
+  { symbol: "\u039E", search: "greek letter", name: "uppercase xi" },
+  { symbol: "\u039F", search: "greek letter", name: "uppercase omicron" },
+  { symbol: "\u03A0", search: "greek letter", name: "uppercase pi" },
+  { symbol: "\u03A1", search: "greek letter", name: "uppercase rho" },
+  { symbol: "\u03A3", search: "greek letter", name: "uppercase sigma" },
+  { symbol: "\u03A4", search: "greek letter", name: "uppercase tau" },
+  { symbol: "\u03A5", search: "greek letter", name: "uppercase upsilon" },
+  { symbol: "\u03A6", search: "greek letter", name: "uppercase phi" },
+  { symbol: "\u03A7", search: "greek letter", name: "uppercase chi" },
+  { symbol: "\u03A8", search: "greek letter", name: "uppercase psi" },
+  { symbol: "\u03A9", search: "greek letter", name: "uppercase omega" }
+  //  {symbol:"",search:"greek letter",name:""},
+];
 var API_TOKEN = localStorage.getItem("key");
 if (Notification.permission != "granted" && times.user.notify) Notification.requestPermission();
 getData("users/self", "", (e) => {
@@ -482,6 +563,42 @@ setInterval(() => {
     if (Notification.permission == "granted" && times.user.notify) new Notification("1 minute left!", { body: `You have 1 minute left in ${left.name}` });
   }
 }, 1e3);
+function openSchedule() {
+  popup(`
+	<p>Time left in <span class="period">0</span>: <span class="timeLeft">0:00:00</span></p>
+	<p>Schedule:
+		<select id="setSchedule" onchange="setSchedule(document.getElementById('setSchedule').value)">
+			${times.schools[times.user.school].schedules.map((e) => `<option value="${e}" ${e == times.user.schedule ? `selected=""` : ""}">${e}</option>`)}
+		</select>
+	</p>
+	<p>Grade:
+		<select id="setGrade" onchange="setGrade(document.getElementById('setGrade').value)">
+  		${times.grades.map((e) => `<option value="${e}" ${e == times.user.grade ? `selected=""` : ""}">${e}</option>`)}
+  	</select>
+  </p>
+	${times.schools[times.user.school].type == 1 ? `
+	<p>
+		Day:
+		<select id="setDay" onchange="setDay(document.getElementById('setDay').value)">
+			${[0, 1].map((e) => `<option value="${e}" ${times.user.abDay == e ? `selected=""` : ""}>${["A", "B"][e]}</option>`).join(", ")}
+		</select>
+	</p>
+	<p>
+		Lunch:
+		${["A", "B"].map((day) => `
+		<br>${day}: 
+		<select id="setLunch${day}" onchange="setLunch('${day}', document.getElementById('setLunch${day}').value)">
+			${Object.keys(times.schools[times.user.school].lunches.getCurrent()).map((lunch) => `<option value=${lunch} ${lunch == (day == "B" ? times.user.bLunch : times.user.aLunch) ? `selected=""` : ""}>${lunch}</option>`).join("")}
+		</select>
+		`).join(", ")}
+	</p>
+	<p>
+		<input type="checkbox" id="setNotify" ${times.user.notify ? `checked=""` : ""}" onchange="setNotify(document.getElementById('setNotify').checked)"></input>
+		1 Minute Notifications
+	</p>
+	` : ""}
+  `, "Schedule");
+}
 function openProfile() {
   let content = "";
   if (window.profileLoaded) {
@@ -514,6 +631,127 @@ function openProfile() {
   }
   popup(content, "Profile");
 }
+function openMath() {
+  let p = "";
+  mathSymbols.forEach((e) => {
+    p += `<button id="math${e.symbol}" class="mathSymbol" title="${e.name}" onclick="copy('${e.symbol}')">${e.symbol}</button>`;
+  });
+  popup(`
+    <details>
+      <summary>Math Symbols</summary>
+      <input id="mathSearch" type="text" placeholder="Search...">
+      <br>${p}
+    </details>
+    <details>
+      <summary>Math Equations</summary>
+      <details>
+        <summary>Trigonometry</summary>
+        Note: side a is opposite angle A, side b is opposite angle B, and side c is opposite angle C.
+        <details>
+          <summary>Law of Sines</summary>
+          <p>sin A / a = sin B / b = sin C / c</p>
+          <p>a = b sin A / sin B</p>
+          <p>A = sin\u207B\xB9 ( a sin B / b )</p>
+          <p>Solve for
+            <select id="mathLOS" class="mathSolve">
+              <option value="0">side (a)</option>
+              <option value="1">angle (A)</option>
+            </select>:
+          </p>
+          <span id="mathLOSLabel1" class="mathLabel">b = </span>
+          <input id="mathLOSIn1" class="mathIn"><br>
+          <span id="mathLOSLabel2" class="mathLabel">A = </span>
+          <input id="mathLOSIn2" class="mathIn"><br>
+          <span id="mathLOSLabel3" class="mathLabel">B = </span>
+          <input id="mathLOSIn3" class="mathIn"><br>
+          <span>Round to the nearest </span>
+          <input id="mathLOSRound" class="mathIn">
+          <p id="mathLOSOut">a = 0</p>
+        </details>
+        <details>
+          <summary>Law of Cosines</summary>
+          <p>a\xB2 = b\xB2 + c\xB2 - 2bc cos A</p>
+          <p>a = \u221A<span style="text-decoration:overline">b\xB2 + c\xB2 - 2bc cos A</span></p>
+          <p>A = cos\u207B\xB9 ((b\xB2 + c\xB2 - a\xB2) / 2bc)</p>
+          <p>Solve for
+            <select id="mathLOC" class="mathSolve">
+              <option value="0">side (a)</option>
+              <option value="1">angle (A)</option>
+            </select>:
+          </p>
+          <span id="mathLOCLabel1" class="mathLabel">b = </span>
+          <input id="mathLOCIn1" class="mathIn"><br>
+          <span id="mathLOCLabel2" class="mathLabel">c = </span>
+          <input id="mathLOCIn2" class="mathIn"><br>
+          <span id="mathLOCLabel3" class="mathLabel">A = </span>
+          <input id="mathLOCIn3" class="mathIn"><br>
+          <span>Round to the nearest </span>
+          <input id="mathLOCRound" class="mathIn">
+          <p id="mathLOCOut">a = 0</p>
+        </details>
+      </details>
+    </details>
+  `, "Math Picker/Solver");
+  document.getElementById("mathSearch").addEventListener("input", updateMath);
+  let equations = [
+    [
+      //Law of Sines
+      { solve: (b, A, B) => b * Math.sin(A) / Math.sin(B), in: ["b", "A", "B"], out: "a" },
+      // solve for side a
+      { solve: (a, b, B) => Math.asin(a * Math.sin(B) / b), in: ["a", "b", "B"], out: "A" }
+      // solve for angle A
+    ],
+    [
+      //Law of Cosines
+      { solve: (b, c, A) => Math.sqrt(b * b + c * c - 2 * b * c * Math.cos(A)), in: ["b", "c", "A"], out: "a" },
+      // solve for side a
+      { solve: (a, b, c) => Math.acos((b * b + c * c - a * a) / (2 * b * c)), in: ["a", "b", "c"], out: "A" }
+      // solve for angle A
+    ]
+  ];
+  for (let i in document.getElementsByClassName("mathSolve")) {
+    if (!isNaN(parseInt(i))) {
+      let e = document.getElementsByClassName("mathSolve")[i];
+      let in1 = document.getElementById(e.id + "In1");
+      let in2 = document.getElementById(e.id + "In2");
+      let in3 = document.getElementById(e.id + "In3");
+      let l1 = document.getElementById(e.id + "Label1");
+      let l2 = document.getElementById(e.id + "Label2");
+      let l3 = document.getElementById(e.id + "Label3");
+      let eq = equations[i][e.value];
+      let out = document.getElementById(e.id + "Out");
+      let round = document.getElementById(e.id + "Round");
+      let getV = (v, n, t) => {
+        let r = isNaN(parseFloat(v)) ? NaN : n.toLowerCase() === n ? parseFloat(v) : parseFloat(v) * (t ? 180 / Math.PI : Math.PI / 180);
+        return r;
+      };
+      let solve = () => out.innerHTML = eq.out + " = " + Math.round(getV(eq.solve(getV(in1.value, eq.in[0]), getV(in2.value, eq.in[1]), getV(in3.value, eq.in[2])), eq.out, true) / parseFloat(round.value)) * parseFloat(round.value);
+      in1.addEventListener("input", solve);
+      in2.addEventListener("input", solve);
+      in3.addEventListener("input", solve);
+      round.addEventListener("input", solve);
+      e.addEventListener("input", () => {
+        eq = equations[i][e.value];
+        l1.innerHTML = eq.in[0] + " = ";
+        l2.innerHTML = eq.in[1] + " = ";
+        l3.innerHTML = eq.in[2] + " = ";
+        solve();
+      });
+    }
+  }
+}
+function updateMath() {
+  mathSymbols.forEach((e) => {
+    let elem = document.getElementById("math" + e.symbol);
+    if (elem) {
+      if (e.search.includes(document.getElementById("mathSearch").value) || e.name.includes(document.getElementById("mathSearch").value)) {
+        elem.style.display = "inline";
+      } else {
+        elem.style.display = "none";
+      }
+    }
+  });
+}
 function checkABDay() {
   if ((/* @__PURE__ */ new Date()).getDate() != times.user.lastChecked) {
     if ((/* @__PURE__ */ new Date()).getDate() > times.user.lastChecked) times.user.abDay += (/* @__PURE__ */ new Date()).getDate() - times.user.lastChecked;
@@ -536,4 +774,10 @@ function checkIfHas(data, defaults) {
   }
   return data;
 }
+document.getElementById("hcpss").addEventListener("click", () => {
+  open("https://hcpss.instructure.com");
+});
+document.getElementById("profile").addEventListener("click", openProfile);
+document.getElementById("schedule").addEventListener("click", openSchedule);
+document.getElementById("math").addEventListener("click", openMath);
 //# sourceMappingURL=main.js.map

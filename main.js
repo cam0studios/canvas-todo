@@ -822,3 +822,10 @@ function checkIfHas(data, defaults) {
 	}
 	return data;
 }
+
+document.getElementById("hcpss").addEventListener("click", () => {
+	open("https://hcpss.instructure.com");
+});
+document.getElementById("profile").addEventListener("click", openProfile);
+document.getElementById("schedule").addEventListener("click", openSchedule);
+document.getElementById("math").addEventListener("click", openMath);
