@@ -199,7 +199,7 @@ if (true) {
 			school.timeSheet.forEach((periodName, period) => {
 				if (currentTime >= period[0] && currentTime <= period[1]) currentPeriod = { type: 0, name: periodName, period };
 			});
-			let lunch = school.lunches.getCurrent()[times.user.abDay == 0 ? times.user.aLunch : times.user.bLunch];
+			let lunch = school.lunches.getCurrent()[times.user.schedule == "half" ? "Lunch" : (times.user.abDay == 0 ? times.user.aLunch : times.user.bLunch)];
 			if (currentTime >= lunch[0] && currentTime <= lunch[1]) currentPeriod = { type: 1, name: times.user.abDay == 0 ? times.user.aLunch : times.user.bLunch, period: lunch };
 			if (!currentPeriod) return { type: "transition" };
 			return { type: "period", times: currentPeriod.period, name: (currentPeriod.type == 0 ? "Period " : "Lunch ") + currentPeriod.name };
@@ -229,7 +229,7 @@ if (true) {
 					leastTimeLeft = period[0] - currentTime;
 				}
 			});
-			let lunch = school.lunches.getCurrent()[times.user.abDay == 0 ? times.user.aLunch : times.user.bLunch];
+			let lunch = school.lunches.getCurrent()[times.user.schedule == "half" ? "Lunch" : (times.user.abDay == 0 ? times.user.aLunch : times.user.bLunch)];
 			if (lunch[0] - currentTime < leastTimeLeft && lunch[0] - currentTime > 0) {
 				nextPeriod = { type: 1, name: times.user.abDay == 0 ? times.user.aLunch : times.user.bLunch, period: lunch };
 				leastTimeLeft = lunch[0] - currentTime;
@@ -268,6 +268,9 @@ if (!localStorage.getItem("key")) {
 }
 if (!localStorage.getItem("users")) {
 	localStorage.setItem("users", "[]");
+}
+if (!localStorage.getItem("apiUrl")) {
+	localStorage.setItem("apiUrl", "https://corsanywhere.vercel.app");
 }
 window.profileLoaded = false;
 const mathSymbols = [
@@ -355,7 +358,8 @@ const mathSymbols = [
 ];
 
 const API_TOKEN = localStorage.getItem("key");
-if (Notification.permission != "granted" && times.user.notify) Notification.requestPermission();
+const CORS_PROXY = localStorage.getItem("apiUrl");
+if ("Notification" in window && Notification.permission != "granted" && times.user.notify) Notification.requestPermission();
 
 //Assignments
 getData("users/self", "", (e) => {
@@ -395,7 +399,7 @@ getData("users/self/todo", "per_page=100", (assignments) => {
 			let e2 = assignments[i];
 			let elem = document.createElement("div");
 			elem.setAttribute("class", "item");
-			elem.setAttribute("onclick", `window.open("${e.html_url.split("#")[0]}","_blank").focus()`);
+			elem.addEventListener("click", () => window.open(e.html_url.split("#")[0], "_blank").focus());
 			let eClass = date.getTime() - Date.now() < 0 ? "missing" : (date.getDate() == new Date().getDate() ? "today" : "later");
 			elem.innerHTML = `<h2>${e2.name}</h2><p>${e2.course}</p><p class="${eClass}">${e2.due}</p>`;
 			document.getElementById("todo").append(elem);
@@ -407,6 +411,7 @@ getData("users/self/todo", "per_page=100", (assignments) => {
 	}
 }, (err) => {
 	document.getElementById("todo").innerHTML += `<p>${err.stack}</p>`;
+	console.error(err);
 });
 
 getData("users/self/favorites/courses", "per_page=100", (courses) => {
@@ -416,7 +421,7 @@ getData("users/self/favorites/courses", "per_page=100", (courses) => {
 				announcements.forEach((e) => {
 					let elem = document.createElement("div");
 					elem.setAttribute("class", "item");
-					//elem.setAttribute("onclick", `window.open("${e.url}","_blank").focus()`);
+					//elem.addEventListener("click", () => window.open(e.url, "_blank").focus());
 					elem.addEventListener("click", () => {
 						popup(`<iframe src="data:text/html;charset=utf8,${encodeURIComponent(e.message)}" frameborder=0>`, `${e.title} - ${e.author.display_name}`);
 					});
@@ -435,7 +440,6 @@ getData("users/self/favorites/courses", "per_page=100", (courses) => {
 	} else {
 		let elem = "<p>" + courses.errors.map(e => e.message).join("</p><p>") + "</p>";
 		document.getElementById("announcements").innerHTML += elem;
-		document.getElementById("grades").innerHTML += elem;
 	}
 }, (err) => {
 	document.getElementById("announcements").innerHTML += `<p>${err.stack}</p>`;
@@ -451,20 +455,22 @@ getData("users/self/courses", "enrollment_state=active&per_page=100&include%5B%5
 		if (name == null) name = course.name;
 		let elem = document.createElement("div");
 		elem.setAttribute("class", "item");
-		elem.setAttribute("onclick", `window.open("https://hcpss.instructure.com/courses/${course.id}/grades","_blank").focus()`);
+		elem.addEventListener("click", () => window.open(`https://hcpss.instructure.com/courses/${course.id}/grades`, "_blank").focus());
 		let width = "min(calc(25vw - 77px), 250px)";
 		elem.innerHTML = `<h2>${name}</h2><p>${score == null ? "N/A" : (score + "%")}</p>${score == null ? "" : `<div class="gradeDisplayBg" style="width:${width}"><div class="gradeDisplay ${score <= 67.5 ? "gradeTerrible" : score <= 77.5 ? "gradeReallyBad" : score <= 87.5 ? "gradeBad" : score <= 95 ? "gradeMid" : "gradeGood"}" style="width:calc(${width} * ${Math.min(score, 100) / 100})"></div></div>`}`;
 		document.getElementById("grades").append(elem);
 	});
-}, (err) => { console.error(err) });
+}, (err) => {
+	document.getElementById("grades").innerHTML += `<p>${err.stack}</p>`;
+});
 
 getData("conversations", "per_page=10", (convos) => {
 	if (!convos.errors) {
 		convos.forEach((e) => {
 			let elem = document.createElement("div");
 			elem.setAttribute("class", "item " + e.workflow_state);
-			//elem.setAttribute("onclick", `window.open("https://hcpss.instructure.com/conversations","_blank").focus()`);
-			elem.onclick = function () {
+			//elem.addEventListener("click, () => window.open("https://hcpss.instructure.com/conversations","_blank").focus());
+			elem.addEventListener("click", () => {
 				popup("", "loading...");
 				getData(`conversations/${e.id}`, "", (convo) => {
 					removePopup();
@@ -476,7 +482,7 @@ getData("conversations", "per_page=10", (convos) => {
 					pre.storedMessages[e.id] = { html: html, subject: convo.subject };
 					localStorage.setItem("prefers", JSON.stringify(pre));
 				});
-			};
+			});
 			elem.innerHTML = `<h2>${e.subject}</h2><p>${e.context_name}</p><p>${new Date(e.last_message_at).toLocaleString("en", { timeStyle: "short", dateStyle: "full" })}</p><p>${e.last_message}</p>`;
 			document.getElementById("inbox").append(elem);
 		});
@@ -502,23 +508,7 @@ getData("conversations/unread_count", "", (e) => {
 });
 */
 function getData(loc, inputs, callback, error) {
-	fetch(`https://corsanywhere.vercel.app/${API_URL}/${loc}?access_token=${API_TOKEN}${inputs.length > 0 ? "&" + inputs : ""}`, {
-		"body":
-			JSON.stringify({
-				headers: {
-					"accept": "application/json, text/plain, */*",
-					"accept-language": "en-US,en;q=0.9,es;q=0.8",
-					"cache-control": "no-cache",
-					"pragma": "no-cache",
-					"prefer": "safe",
-					"sec-ch-ua": "\"Microsoft Edge\";v=\"117\", \"Not;A=Brand\";v=\"8\", \"Chromium\";v=\"117\"",
-					"sec-ch-ua-mobile": "?0",
-					"sec-ch-ua-platform": "\"Windows\"",
-					"sec-fetch-dest": "empty",
-					"sec-fetch-mode": "cors",
-					"sec-fetch-site": "same-site"
-				}
-			}),
+	fetch(`${CORS_PROXY}/https://${API_URL}/${loc}?access_token=${API_TOKEN}${inputs.length > 0 ? "&" + inputs : ""}`, {
 		"referrerPolicy": "same-origin",
 		"method": "GET",
 		"body": null,
@@ -580,26 +570,26 @@ setInterval(() => {
 	if (left.timeLeft < 60 && !times.user.notified) {
 		console.log("notify");
 		times.user.notified = true;
-		if (Notification.permission == "granted" && times.user.notify) new Notification("1 minute left!", { body: `You have 1 minute left in ${left.name}` });
+		if ("Notification" in window && Notification.permission == "granted" && times.user.notify) new Notification("1 minute left!", { body: `You have 1 minute left in ${left.name}` });
 	}
 }, 1000);
 function openSchedule() {
 	popup(`
 	<p>Time left in <span class="period">0</span>: <span class="timeLeft">0:00:00</span></p>
 	<p>Schedule:
-		<select id="setSchedule" onchange="setSchedule(document.getElementById('setSchedule').value)">
+		<select id="setSchedule">
 			${times.schools[times.user.school].schedules.map(e => `<option value="${e}" ${(e == times.user.schedule) ? `selected=""` : ""}">${e}</option>`)}
 		</select>
 	</p>
 	<p>Grade:
-		<select id="setGrade" onchange="setGrade(document.getElementById('setGrade').value)">
+		<select id="setGrade">
   		${times.grades.map(e => `<option value="${e}" ${(e == times.user.grade) ? `selected=""` : ""}">${e}</option>`)}
   	</select>
   </p>
 	${times.schools[times.user.school].type == 1 ? `
 	<p>
 		Day:
-		<select id="setDay" onchange="setDay(document.getElementById('setDay').value)">
+		<select id="setDay">
 			${[0, 1].map(e => `<option value="${e}" ${(times.user.abDay == e) ? `selected=""` : ""}>${["A", "B"][e]}</option>`).join(", ")}
 		</select>
 	</p>
@@ -607,17 +597,25 @@ function openSchedule() {
 		Lunch:
 		${["A", "B"].map(day => `
 		<br>${day}: 
-		<select id="setLunch${day}" onchange="setLunch('${day}', document.getElementById('setLunch${day}').value)">
+		<select id="setLunch${day}">
 			${Object.keys(times.schools[times.user.school].lunches.getCurrent()).map(lunch => `<option value=${lunch} ${lunch == (day == "B" ? times.user.bLunch : times.user.aLunch) ? `selected=""` : ""}>${lunch}</option>`).join("")}
 		</select>
 		`).join(", ")}
 	</p>
 	<p>
-		<input type="checkbox" id="setNotify" ${times.user.notify ? `checked=""` : ""}" onchange="setNotify(document.getElementById('setNotify').checked)"></input>
+		<input type="checkbox" id="setNotify" ${times.user.notify ? `checked=""` : ""}"></input>
 		1 Minute Notifications
 	</p>
 	`: ""}
   `, "Schedule");
+	document.getElementById("setSchedule").addEventListener("change", () => setSchedule(document.getElementById("setSchedule").value));
+	document.getElementById("setGrade").addEventListener("change", () => setGrade(document.getElementById("setGrade").value));
+	document.getElementById("setDay").addEventListener("change", () => setDay(document.getElementById("setDay").value));
+	["A", "B"].forEach(day => {
+		document.getElementById(`setLunch${day}`).addEventListener("change", () => setLunch(day, document.getElementById(`setLunch${day}`).value));
+	});
+
+	document.getElementById("setNotify").addEventListener("change", () => setNotify(document.getElementById('setNotify').checked));
 }
 function openProfile() {
 	let content = "";
@@ -625,36 +623,84 @@ function openProfile() {
 		content += `
     <p>User: ${window.profile.name} (${window.profile.pronouns})</p>
     <br>
-    <button onclick="localStorage.setItem('key',null);location.reload()">Sign Out</button>
+    <button id="signOutBtn">Sign Out</button>
     <br>
-    <button onclick="elem=document.createElement('p');elem.innerHTML='Token: ${localStorage.getItem("key")}';document.querySelector('.popup').append(elem);document.querySelector('#viewToken').remove()" id="viewToken">View API Token</button>
+    <button id="viewTokenBtn">View API Token</button>
     <br>
-    <button onclick="copy('${localStorage.getItem("key")}')">Copy Token</button>
+    <button id="copyTokenBtn">Copy Token</button>
     <br>
     <br>`;
 	} else {
 		content += `
-    <button id="viewToken" onclick="elem=document.createElement('p');elem.innerHTML='Token: ${localStorage.getItem("key")}';document.querySelector('.popup').append(elem);document.querySelector('#viewToken').remove()" id="viewToken">View API Token</button>
+    <button id="viewTokenBtn">View API Token</button>
     <br/><br/>
     `;
 		JSON.parse(localStorage.getItem("users")).forEach((e, i) => {
-			content += `<div id="user${i}"><button onclick="localStorage.setItem('key','${e.key}');location.reload()">${e.name}</button> <button onclick="p=JSON.parse(localStorage.getItem('users'));p.splice(${i},1);localStorage.setItem('users',JSON.stringify(p));document.getElementById('user${i}').remove()">x</button> </div>`;
+			content += `<div id="user${i}"><button class="makeCurrentUser">${e.name}</button> <button class="removeUser">x</button> </div>`;
 		});
 		content += `
-    <button onclick="p=JSON.parse(localStorage.getItem('users'));let n = prompt('name');let k = prompt('token');p.push({name:n,key:k});localStorage.setItem('users',JSON.stringify(p));localStorage.setItem('key',k);location.reload()">Add user</button>
+    <button id="addUserBtn">Add user</button>
     <br/>
-    <button onclick='localStorage.setItem("key", prompt("API Token?"));location.reload()'>Sign in</button>
+    <button id="signInBtn">Sign in</button>
     <br/>
     <h2>How to generate a token:</h2>
     <p>Go to Canvas and click your profile picture, hit Settings. Once the page loads, scroll down and hit New Access Token. Set the purpose to anything you like, and hit Generate. Copy the long string of text (ex: 1234~qwertyuiop...) and paste it into the sign in prompt here.</p>
     `;
 	}
+	content += `
+		<input type="text" id="apiUrl" value="${localStorage.getItem("apiUrl")}"></input>
+		<button id="updateUrl">Update API URL</button>
+	`;
 	popup(content, "Profile");
+	document.getElementById("viewTokenBtn").addEventListener("click", () => {
+		elem = document.createElement("p");
+		elem.appendChild(document.createTextNode(`Token: ${localStorage.getItem("key")}`));
+		document.querySelector(".popup").append(elem);
+		document.getElementById("viewTokenBtn").remove();
+	});
+	if (window.profileLoaded) {
+		document.getElementById("signOutBtn").addEventListener("click", () => {
+			localStorage.setItem("key", null);
+			location.reload();
+		});
+		document.getElementById("copyTokenBtn").addEventListener("click", () => copy(localStorage.getItem("key")));
+	} else {
+		JSON.parse(localStorage.getItem("users")).forEach((e, i) => {
+			document.querySelector(`#user${i}>.makeCurrentUser`).addEventListener("click", () => {
+				localStorage.setItem("key", e.key);
+				location.reload();
+			});
+			document.querySelector(`#user${i}>.removeUser`).addEventListener("click", () => {
+				users = JSON.parse(localStorage.getItem("users"));
+				users.splice(i, 1);
+				localStorage.setItem("users", JSON.stringify(users));
+				document.getElementById(`user${i}`).remove()
+			});
+		});
+		document.getElementById("addUserBtn").addEventListener("click", () => {
+			users = JSON.parse(localStorage.getItem("users"));
+			let name = prompt("name");
+			let key = prompt("token");
+			users.push({ name, key });
+			localStorage.setItem("users", JSON.stringify(users));
+			localStorage.setItem("key", key);
+			location.reload();
+		});
+		document.getElementById("signInBtn").addEventListener("click", () => {
+			localStorage.setItem("key", prompt("API Token?"));
+			location.reload();
+		});
+	}
+	document.getElementById("updateUrl").addEventListener("click", () => {
+		console.log("click");
+		localStorage.setItem("apiUrl", document.getElementById("apiUrl").value);
+		location.reload();
+	});
 }
 function openMath() {
 	let p = "";
 	mathSymbols.forEach((e) => {
-		p += `<button id="math${e.symbol}" class="mathSymbol" title="${e.name}" onclick="copy('${e.symbol}')">${e.symbol}</button>`;
+		p += `<button id="math${e.symbol}" class="mathSymbol" title="${e.name}">${e.symbol}</button>`;
 	});
 	popup(`
     <details>
@@ -713,6 +759,10 @@ function openMath() {
     </details>
   `, "Math Picker/Solver");
 	document.getElementById("mathSearch").addEventListener("input", updateMath);
+	mathSymbols.forEach((e) => {
+		document.getElementById(`math${e.symbol}`).addEventListener("click", () => copy(e.symbol));
+	});
+
 	let equations = [
 		[  //Law of Sines
 			{ solve: (b, A, B) => (b * Math.sin(A)) / Math.sin(B), in: ["b", "A", "B"], out: "a" }, // solve for side a
